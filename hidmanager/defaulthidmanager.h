@@ -53,6 +53,10 @@ private slots:
   virtual void                      heToggleObjectDisplayMode();
   virtual void                      heToggleSimulation();
   virtual void                      heToggleSelectAllObjects();
+
+  //virtual void                      heQuadGoUp();
+
+
 //  virtual void                      heUnlockCamera();
   virtual void                      heZoom( const HidInputEvent::HidInputParams& params );
 

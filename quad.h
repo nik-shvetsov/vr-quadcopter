@@ -1,6 +1,9 @@
 #ifndef QUAD_H
 #define QUAD_H
 
+#include "rotor.h"
+#include "motor.h"
+
 #include <parametrics/gmpsphere>
 #include <gmParametricsModule>
 
@@ -26,6 +29,8 @@ public:
     void moveDown();
     void moveRight();
     void moveLeft();
+    void moveForward();
+    void moveBackward();
 
 protected:
   void localSimulate(double dt);
@@ -33,8 +38,11 @@ protected:
 private:
   GMlib::Vector<float,3> _velocity;
   double _mass;
-
   GMlib::Vector<float,3> _dS;
+
+  std::vector<Motor*> _motors {};
+  std::vector<Rotor*> _rotors {};
+
 
 }; // END class
 

@@ -76,6 +76,9 @@ set( HDRS
   application/utils.h
 
   testtorus.h
+  terrain.h
+  rotor.h
+  motor.h
   quad.h
   scenario.h
 
@@ -98,7 +101,11 @@ set( SRCS
   application/window.cpp
 
   application/main.cpp
+  terrain.cpp
+  rotor.cpp
+  motor.cpp
   quad.cpp
+
   scenario.cpp
 
 

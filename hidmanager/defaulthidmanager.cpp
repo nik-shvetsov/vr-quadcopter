@@ -43,6 +43,11 @@ void DefaultHidManager::triggerOGLActions() {
   }
 }
 
+//void DefaultHidManager::heQuadGoUp()
+//{
+
+//}
+
 void DefaultHidManager::heDeSelectAllObjects() {
 
   scene()->removeSelections();
@@ -648,6 +653,14 @@ void DefaultHidManager::setupDefaultHidBindings() {
                          "Stuff that happens on left mouse release",
                          this, SLOT(heLeftMouseReleaseStuff()) );
 
+  //Quad controls
+//  QString ha_id_quad_up =
+//      registerHidAction( "Object interation",
+//                         "Move quadcopter up",
+//                         "Move quadcopter up",
+//                         this, SLOT(heQuadGoUp()) );
+
+
 
 
 
@@ -659,6 +672,8 @@ void DefaultHidManager::setupDefaultHidBindings() {
   registerHidMapping( ha_id_objint_replot_low,            new KeyPressInput( Qt::Key_P, Qt::ControlModifier) );
   registerHidMapping( ha_id_sim_toggle,                   new KeyPressInput( Qt::Key_R ) );
   registerHidMapping( ha_id_render_toggle_shademode,      new KeyPressInput( Qt::Key_Z ) );
+
+  //registerHidMapping( ha_id_quad_up,                      new KeyPressInput( Qt::Key_Up ) );
 
   registerHidMapping( ha_id_objsel_select,                new MousePressInput( Qt::RightButton ) );
   registerHidMapping( ha_id_view_lock_to,                 new MousePressInput( Qt::RightButton, Qt::ControlModifier ) );

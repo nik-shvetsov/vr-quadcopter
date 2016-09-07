@@ -226,6 +226,7 @@ const std::shared_ptr<GMlib::Camera>&
 GMlibWrapper::camera(const QString& name) const {
 
   return rcPair(name).camera;
+
 }
 
 void  GMlibWrapper::prepare() {  _scene->prepare(); }

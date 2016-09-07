@@ -2,7 +2,7 @@
 #define GMLIBWRAPPER_H
 
 class TestTorus;
-class Quad; //wtf
+class Quad;
 
 
 class GLContextSurfaceWrapper;

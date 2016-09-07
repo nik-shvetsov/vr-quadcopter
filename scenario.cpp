@@ -1,6 +1,8 @@
 #include "scenario.h"
 
 #include "testtorus.h"
+#include "quad.h"
+#include "terrain.h"
 
 //// hidmanager
 //#include "hidmanager/defaulthidmanager.h"
@@ -12,8 +14,12 @@
 
 // qt
 #include <QQuickItem>
+#include <QDebug>
 
-
+//void Scenario::initQuad(Quad& quad)
+//{
+//  _qd = &quad;
+//}
 
 void Scenario::initializeScenario() {
 
@@ -72,6 +78,7 @@ void Scenario::initializeScenario() {
 
   // Surface visualizers
   //auto surface_visualizer = new GMlib::PSurfNormalsVisualizer<float,3>;
+  //auto surface_visualizer = new GMlib::PSurfParamLinesVisualizer<float,3>;
 
   // Surface
 //  auto surface = new TestTorus;
@@ -83,25 +90,55 @@ void Scenario::initializeScenario() {
 //  surface->test01();
 
   //adding my objects
-  GMlib::PSphere<float>* sphere = new GMlib::PSphere<float>(1.0);
-  sphere->toggleDefaultVisualizer();
-  sphere->replot(200,200,1,1);
-  sphere->translateGlobal(GMlib::Vector<float,3>(0,0,1.0));
-  sphere->setMaterial(GMlib::GMmaterial::Obsidian);
-  scene()->insert(sphere);
 
-  GMlib::PPlane<float>* floor = new GMlib::PPlane<float>
+  //check sphere
+//  GMlib::PSphere<float>* sphere = new GMlib::PSphere<float>(1.0);
+//  sphere->insertVisualizer(surface_visualizer);
+//  sphere->replot(200,200,1,1);
+//  sphere->translateGlobal(GMlib::Vector<float,3>(0,0,1.0));
+//  sphere->setMaterial(GMlib::GMmaterial::Obsidian);
+//  scene()->insert(sphere);
+
+
+
+
+//  GMlib::PLine<float>* cyl = new GMlib::PLine<float>(GMlib::Point<float,3>(0,0,0), GMlib::Vector<float,3>(-7,0,0));
+//  cyl->toggleDefaultVisualizer();
+//  cyl->replot(0,2);
+//  cyl->setColor(GMlib::GMcolor::Black);
+//  cyl->translateGlobal(GMlib::Vector<float,3>(-10,0,1.0));
+//  cyl->setMaterial(GMlib::GMmaterial::Obsidian);
+//  scene()->insert(cyl);
+
+  //terrain
+  auto floor = new Terrain
           (GMlib::Point<float,3>(-20,-10,0), GMlib::Vector<float,3>(0,70,0), GMlib::Vector<float,3>(40,0,0));
-
-  floor->toggleDefaultVisualizer();
-  floor->replot(200,200,1,1);
-  floor->setMaterial(GMlib::GMmaterial::Emerald);
   scene()->insert(floor);
 
+  //quadcopter
+  _qd = new Quad(1,1,GMlib::Vector<float,3>(0,0,1));
+  //initQuad(quad);
+  _qd->translateGlobal(GMlib::Vector<float,3>(0,0,1));
+  //_qd->insert(sphere);
+  scene()->insert(_qd);
 
 
 
 
+
+
+
+
+  //_qd->translateGlobal(GMlib::Vector<float,3>(0,10,5));
+
+
+//  auto cl1 = new Rotor(GMlib::Vector<float,3>(0,0,0), 1);
+//  cl1->toggleDefaultVisualizer();
+//  cl1->replot(200,200,1,1);
+//  cl1->translateGlobal(GMlib::Vector<float,3>(5,-5,3.0));
+//  cl1->setMaterial(GMlib::GMmaterial::Obsidian);
+//  cl1->rotate(GMlib::Angle(90), GMlib::Vector<float,3>(0,1,0));
+//  scene()->insert(cl1);
 
 }
 
