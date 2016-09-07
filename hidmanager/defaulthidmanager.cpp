@@ -16,7 +16,6 @@ using namespace GMlib;
 #define SNAP 0.01
 
 
-
 DefaultHidManager::DefaultHidManager(QObject* parent)
   : StandardHidManager(parent), _gmlib{nullptr} {}
 
@@ -425,6 +424,45 @@ void DefaultHidManager::heToggleObjectDisplayMode() {
   }
 }
 
+//control methods
+
+void DefaultHidManager::heMoveUp() {
+
+    qDebug()<<"go up";
+    emit signMoveUp();
+}
+
+void DefaultHidManager::heMoveDown() {
+
+    qDebug()<<"go down";
+    emit signMoveDown();
+}
+
+void DefaultHidManager::heMoveForward() {
+
+    qDebug()<<"go forward";
+    emit signMoveForward();
+}
+
+void DefaultHidManager::heMoveBackward() {
+
+    qDebug()<<"go backward";
+    emit signMoveBackward();
+}
+
+void DefaultHidManager::heMoveLeft() {
+
+    qDebug()<<"go left";
+    emit signMoveLeft();
+}
+
+void DefaultHidManager::heMoveRight() {
+
+    qDebug()<<"go right";
+    emit signMoveRight();
+}
+//----
+
 void DefaultHidManager::heToggleSimulation() {
 
   emit signToggleSimulation();
@@ -660,8 +698,47 @@ void DefaultHidManager::setupDefaultHidBindings() {
 //                         "Move quadcopter up",
 //                         this, SLOT(heQuadGoUp()) );
 
+    QString ha_id_move_up =
+        registerHidAction( "Object interation",
+                           "Move quadcopter up",
+                           "Move quadcopter",
+                           this, SLOT(heMoveUp()),
+                           OGL_TRIGGER);
 
+    QString ha_id_move_down =
+        registerHidAction( "Object interation",
+                           "Move quadcopter down",
+                           "Move quadcopter",
+                           this, SLOT(heMoveDown()),
+                           OGL_TRIGGER);
 
+    QString ha_id_move_forward =
+        registerHidAction( "Object interation",
+                           "Move quadcopter forward",
+                           "Move quadcopter",
+                           this, SLOT(heMoveForward()),
+                           OGL_TRIGGER);
+
+    QString ha_id_move_backward =
+        registerHidAction( "Object interation",
+                           "Move quadcopter backward",
+                           "Move quadcopter",
+                           this, SLOT(heMoveBackward()),
+                           OGL_TRIGGER);
+
+    QString ha_id_move_left =
+        registerHidAction( "Object interation",
+                           "Move quadcopter left",
+                           "Move quadcopter",
+                           this, SLOT(heMoveLeft()),
+                           OGL_TRIGGER);
+
+    QString ha_id_move_right =
+        registerHidAction( "Object interation",
+                           "Move quadcopter right",
+                           "Move quadcopter",
+                           this, SLOT(heMoveRight()),
+                           OGL_TRIGGER);
 
 
   //// Set up initial mapping
@@ -673,7 +750,14 @@ void DefaultHidManager::setupDefaultHidBindings() {
   registerHidMapping( ha_id_sim_toggle,                   new KeyPressInput( Qt::Key_R ) );
   registerHidMapping( ha_id_render_toggle_shademode,      new KeyPressInput( Qt::Key_Z ) );
 
-  //registerHidMapping( ha_id_quad_up,                      new KeyPressInput( Qt::Key_Up ) );
+  //control keys
+  registerHidMapping( ha_id_move_up,                      new KeyPressInput( Qt::Key_5, Qt::KeypadModifier));
+  registerHidMapping( ha_id_move_down,                    new KeyPressInput( Qt::Key_0, Qt::KeypadModifier));
+  registerHidMapping( ha_id_move_forward,                 new KeyPressInput( Qt::Key_8, Qt::KeypadModifier));
+  registerHidMapping( ha_id_move_backward,                new KeyPressInput( Qt::Key_2, Qt::KeypadModifier));
+  registerHidMapping( ha_id_move_left,                    new KeyPressInput( Qt::Key_4, Qt::KeypadModifier));
+  registerHidMapping( ha_id_move_right,                   new KeyPressInput( Qt::Key_6, Qt::KeypadModifier));
+
 
   registerHidMapping( ha_id_objsel_select,                new MousePressInput( Qt::RightButton ) );
   registerHidMapping( ha_id_view_lock_to,                 new MousePressInput( Qt::RightButton, Qt::ControlModifier ) );

@@ -18,9 +18,14 @@ public:
   void    initializeScenario() override;
   void    cleanupScenario() override;
 
-  void    keyPressed(const QString& name, QKeyEvent* event);
+  void moveUp();
+  void moveDown();
+  void moveRight();
+  void moveLeft();
+  void moveForward();
+  void moveBackward();
 
-
+  //void    keyPressed(const QString& name, QKeyEvent* event);
   //void  initQuad( Quad& quad );
 
 private:

@@ -117,6 +117,27 @@ GuiApplication::afterOnSceneGraphInitialized() {
   connect( &_hidmanager,          SIGNAL(signOpenCloseHidHelp()),
            _window.rootObject(),  SIGNAL(toggleHidBindView()) );
 
+  //colntrols of the quad
+
+    connect( &_hidmanager, &DefaultHidManager::signMoveUp,
+             &_scenario, &Scenario::moveUp );
+
+    connect( &_hidmanager, &DefaultHidManager::signMoveDown,
+             &_scenario, &Scenario::moveDown );
+
+    connect( &_hidmanager, &DefaultHidManager::signMoveForward,
+             &_scenario, &Scenario::moveForward );
+
+    connect( &_hidmanager, &DefaultHidManager::signMoveBackward,
+             &_scenario, &Scenario::moveBackward );
+
+    connect( &_hidmanager, &DefaultHidManager::signMoveLeft,
+             &_scenario, &Scenario::moveLeft );
+
+    connect( &_hidmanager, &DefaultHidManager::signMoveRight,
+             &_scenario, &Scenario::moveRight );
+
+
   // Update RCPair name model
   _scenario.updateRCPairNameModel();
 

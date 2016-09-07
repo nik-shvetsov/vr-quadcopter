@@ -124,11 +124,6 @@ void Scenario::initializeScenario() {
 
 
 
-
-
-
-
-
   //_qd->translateGlobal(GMlib::Vector<float,3>(0,10,5));
 
 
@@ -145,3 +140,37 @@ void Scenario::initializeScenario() {
 void Scenario::cleanupScenario() {
 
 }
+
+void Scenario::moveUp()
+{
+    _qd->translate(GMlib::Vector<float,3>(0,0,1)); //placeholder for checking
+}
+
+void Scenario::moveDown()
+{
+
+}
+
+void Scenario::moveForward()
+{
+
+}
+
+void Scenario::moveBackward()
+{
+
+}
+
+void Scenario::moveRight()
+{
+
+}
+void Scenario::moveLeft()
+{
+
+}
+
+
+
+
+

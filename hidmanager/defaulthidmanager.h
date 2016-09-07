@@ -32,6 +32,13 @@ signals:
   void signToggleSimulation();
   void signOpenCloseHidHelp();
 
+  void signMoveUp();
+  void signMoveDown();
+  void signMoveForward();
+  void signMoveBackward();
+  void signMoveLeft();
+  void signMoveRight();
+
 private slots:
   virtual void                      heDeSelectAllObjects();
   virtual void                      heEdit();
@@ -56,12 +63,19 @@ private slots:
 
   //virtual void                      heQuadGoUp();
 
-
 //  virtual void                      heUnlockCamera();
   virtual void                      heZoom( const HidInputEvent::HidInputParams& params );
 
   virtual void                      heLeftMouseReleaseStuff();
   virtual void                      heOpenCloseHidHelp();
+
+  //control slots
+  virtual void                      heMoveUp();
+  virtual void                      heMoveDown();
+  virtual void                      heMoveForward();
+  virtual void                      heMoveBackward();
+  virtual void                      heMoveLeft();
+  virtual void                      heMoveRight();
 
 private:
   GMlib::Camera*                    findCamera( const QString& view_name ) const;
