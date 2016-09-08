@@ -25,13 +25,6 @@ public:
 
     void computeStep(double dt);
 
-    void moveUp();
-    void moveDown();
-    void moveRight();
-    void moveLeft();
-    void moveForward();
-    void moveBackward();
-
 protected:
   void localSimulate(double dt);
 

@@ -111,9 +111,9 @@ void Scenario::initializeScenario() {
 //  scene()->insert(cyl);
 
   //terrain
-  auto floor = new Terrain
+  //auto floor = new Terrain
           (GMlib::Point<float,3>(-20,-10,0), GMlib::Vector<float,3>(0,70,0), GMlib::Vector<float,3>(40,0,0));
-  scene()->insert(floor);
+  //scene()->insert(floor);
 
   //quadcopter
   _qd = new Quad(1,1,GMlib::Vector<float,3>(0,0,1));
@@ -143,7 +143,30 @@ void Scenario::cleanupScenario() {
 
 void Scenario::moveUp()
 {
-    _qd->translate(GMlib::Vector<float,3>(0,0,1)); //placeholder for checking
+    //_qd->translate(GMlib::Vector<float,3>(0,0,1)); //placeholder for checking
+
+    GMlib::Vector<float,3> newVelVect = _qd->getVelocity();
+    if (newVelVect[2] < 8.0 && newVelVect[2] > -8.0)
+    {
+        if (newVelVect[2] < 0.0)
+        {
+            newVelVect[2] = 0.0;
+        }
+
+        newVelVect[2] += 1.0;
+        newVelVect[1] *= 0.5;
+        newVelVect[0] *= 0.5;
+
+        _qd->setVelocity(newVelVect);
+    }
+    else
+    {
+        while (newVelVect[2] >= 8.0 || newVelVect[2] <= -8.0)
+        {
+            newVelVect[2] *= 0.9;
+            _qd->setVelocity(newVelVect);
+        }
+    }
 }
 
 void Scenario::moveDown()

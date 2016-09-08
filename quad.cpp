@@ -115,84 +115,19 @@
     {
         static auto g = GMlib::Vector<float,3>(0,0,-9.8);
         _dS = dt * _velocity + 0.5 * dt * dt * g;
-        //double checkV1 = _velocity*_velocity + 2.0*(g*_dS); //
         _velocity+=dt*g;
-
-
-
-        //double checkV2 = _velocity*_velocity; //
-
-        //if(checkV2 > 0.0001) //
-        //{ //
-           //if(checkV1 > 0.0001) //
-            //{
-                //_velocity *= std::sqrt(checkV1/checkV2); // vector correction 1
-            //}
-        //} //
     }
 
-    void Quad::moveUp()
-    {
-        GMlib::Vector<float,3> newVelVect = this->getVelocity();
-        if (newVelVect[1] < 8.0 && newVelVect[1] > -8.0)
-        {
-            if (newVelVect[1] < 0.0)
-            {
-                newVelVect[1] = 0.0;
-            }
 
-            newVelVect[1] += 1.0;
-            newVelVect[0] *= 0.5;
-            //newVelVect[2] *= 0.5;
-
-            this->setVelocity(newVelVect);
-
-//        qDebug() << newVelVect[0];
-//        qDebug() << "";
-//        qDebug() << newVelVect[1];
-//        qDebug() << "";
-//        qDebug() << newVelVect[2];
-//        qDebug() << "--------------";
-        }
-        else
-        {
-            while (newVelVect[1] >= 8.0 || newVelVect[1] <= -8.0)
-            {
-                newVelVect[1] *= 0.9;
-                this->setVelocity(newVelVect);
-            }
-        }
-    }
-    void Quad::moveDown()
-    {
-
-    }
-    void Quad::moveRight()
-    {
-
-    }
-    void Quad::moveLeft()
-    {
-
-    }
-
-    void Quad::moveForward()
-    {
-
-    }
-
-    void Quad::moveBackward()
-    {
-
-    }
 
   void Quad::localSimulate(double dt)
   {
     //rotateGlobal(GMlib::Angle(_dS.getLength()/this->getRadius()), this->getSurfNormal()^_dS);
     //rotateParent(_dS.getLength(), this->getGlobalPos(), this->getSurfNormal()^_dS);
 
-    rotate(GMlib::Angle(2), GMlib::Vector<float,3>(0,0,1));
+    //rotate(GMlib::Angle(2), GMlib::Vector<float,3>(0,0,1));
 
-    //this->translateParent(_dS);
-    //computeStep(dt);
+    qDebug() << _dS[0] << " " << _dS[1] << " " << _dS[2];
+    computeStep(dt);
+    this->translate(_dS);
   }
