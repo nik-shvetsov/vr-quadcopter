@@ -13,7 +13,7 @@
       this->replot(200,200,1,1);
       this->setMaterial(GMlib::GMmaterial::Chrome);
 
-      float stSize = 5;
+      float stSize = 5; //0.3-0.5
 
       auto stSN = new GMlib::PCylinder<float>(0.1,0.1,stSize);
       stSN->toggleDefaultVisualizer();
@@ -55,7 +55,6 @@
           this->insert(_motors[i]);
       }
 
-
       //rotors
       std::vector<GMlib::Vector<float,3>> translateVecRt;
       translateVecRt.push_back(GMlib::Vector<float,3>(-stSize/2,0,motorSize+0.04));
@@ -63,13 +62,13 @@
       translateVecRt.push_back(GMlib::Vector<float,3>(stSize/2,0, motorSize+0.04));
       translateVecRt.push_back(GMlib::Vector<float,3>(0,stSize/2,motorSize+0.04));
 
-      auto rotor1 = new Rotor(1, 1);
+      auto rotor1 = new Rotor(30, -1);
       _rotors.push_back(rotor1);
-      auto rotor2 = new Rotor(1, 1);
+      auto rotor2 = new Rotor(30, 1);
       _rotors.push_back(rotor2);
-      auto rotor3 = new Rotor(1, -1);
+      auto rotor3 = new Rotor(30, -1);
       _rotors.push_back(rotor3);
-      auto rotor4 = new Rotor(1, 1);
+      auto rotor4 = new Rotor(30, 1);
       _rotors.push_back(rotor4);
 
 
@@ -82,9 +81,6 @@
           _rotors[i]->rotate(GMlib::Angle(90), GMlib::Vector<float,3>(0,1,0));
           this->insert(_rotors[i]);
       }
-
-      qDebug() << _rotors[0]->getVelocityRot() * _rotors[0]->getDir();
-
   }
 
   Quad::~Quad() {}
@@ -111,12 +107,54 @@
         return _dS;
     }
 
+    GMlib::Point<float,3> Quad::getPosition()
+    {
+        _position = this->getPos();
+        return _position;
+    }
+
+    void Quad::setMotorThrust(GMlib::Vector<float,4> thrustvec) //&
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            _motors[i]->setThrust(thrustvec[i]);
+        }
+    }
+
+    GMlib::Vector<float,4> Quad::getMotorThrust()
+    {
+        GMlib::Vector<float,4> thrustvec;
+
+        for (int i = 0; i < 4; i++)
+        {
+            thrustvec[i] = _motors[i]->getThrust();
+        }
+
+        return thrustvec;
+    }
+
+    void Quad::switchDirRotors()
+    {
+        for (auto rot : _rotors) //for (auto rot : _rotors) int i = 0; i < 4; i++
+        {
+            //int direction = rot->getDir() * (-1); //_rotors[i]
+            rot->setDir((rot->getDir() * (-1))); //direction
+        }
+    }
+
     void Quad::computeStep(double dt)
     {
-        static auto g = GMlib::Vector<float,3>(0,0,-9.8);
+        static auto g = GMlib::Vector<float,3>(0,0,-1); //-9.8
         _dS = dt * _velocity + 0.5 * dt * dt * g;
         _velocity+=dt*g;
     }
+
+    void Quad::computeFly(double dt)
+    {
+
+    }
+
+
 
 
 
@@ -127,7 +165,10 @@
 
     //rotate(GMlib::Angle(2), GMlib::Vector<float,3>(0,0,1));
 
-    qDebug() << _dS[0] << " " << _dS[1] << " " << _dS[2];
+    //qDebug() << _dS[0] << " " << _dS[1] << " " << _dS[2];
+    //getPosition();
+    //qDebug() << _position[0] << " " << _position[1] << " " << _position[2];
+
     computeStep(dt);
     this->translate(_dS);
   }

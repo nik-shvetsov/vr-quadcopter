@@ -31,6 +31,7 @@ public:
 private:
 
   Quad* _qd {nullptr};
+  //std::vector<float>* _moveVec;
 
 };
 

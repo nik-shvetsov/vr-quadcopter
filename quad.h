@@ -22,8 +22,16 @@ public:
     GMlib::Vector<float,3> getVelocity();
     double getMass();
     GMlib::Vector<float,3> getDs();
+    GMlib::Point<float,3> getPosition();
+
+    //trust
+    void setMotorThrust(GMlib::Vector<float,4> thrustvec); //&
+    GMlib::Vector<float,4> getMotorThrust();
+
+    void switchDirRotors();
 
     void computeStep(double dt);
+    void computeFly(double dt);
 
 protected:
   void localSimulate(double dt);
@@ -32,6 +40,8 @@ private:
   GMlib::Vector<float,3> _velocity;
   double _mass;
   GMlib::Vector<float,3> _dS;
+
+  GMlib::Point<float,3> _position;
 
   std::vector<Motor*> _motors {};
   std::vector<Rotor*> _rotors {};

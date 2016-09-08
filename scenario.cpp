@@ -111,12 +111,12 @@ void Scenario::initializeScenario() {
 //  scene()->insert(cyl);
 
   //terrain
-  //auto floor = new Terrain
+  auto floor = new Terrain
           (GMlib::Point<float,3>(-20,-10,0), GMlib::Vector<float,3>(0,70,0), GMlib::Vector<float,3>(40,0,0));
-  //scene()->insert(floor);
+  scene()->insert(floor);
 
   //quadcopter
-  _qd = new Quad(1,1,GMlib::Vector<float,3>(0,0,1));
+  _qd = new Quad(1,1.25,GMlib::Vector<float,3>(0,0,1));
   //initQuad(quad);
   _qd->translateGlobal(GMlib::Vector<float,3>(0,0,1));
   //_qd->insert(sphere);
@@ -167,33 +167,59 @@ void Scenario::moveUp()
             _qd->setVelocity(newVelVect);
         }
     }
+
+//    GMlib::Vector<float,4> moveVec = _qd->getMotorThrust();
+//    for (int i = 0; i < 4; i++)
+//    {
+//        moveVec[i] += 1.0; //value?
+//    }
+//    _qd->setMotorThrust(moveVec);
+
 }
 
-void Scenario::moveDown()
+void Scenario::moveDown() //will be used for prototype quadromovment
 {
-
+    GMlib::Vector<float,4> moveVec = _qd->getMotorThrust();
+    for (int i = 0; i < 4; i++)
+    {
+        moveVec[i] -= 1.0; //value?
+    }
+    _qd->setMotorThrust(moveVec);
 }
 
 void Scenario::moveForward()
 {
+    //_qd->switchDirRotors();
 
+    GMlib::Vector<float,4> moveVec = _qd->getMotorThrust();
+    moveVec[2] += 2.0; //diametrically opposite motor to the disired direction
+    moveVec[1] -= 0.5;
+
+    _qd->setMotorThrust(moveVec);
 }
 
 void Scenario::moveBackward()
 {
+    GMlib::Vector<float,4> moveVec = _qd->getMotorThrust();
+    moveVec[1] += 2.0; //diametrically opposite motor to the disired direction
+    moveVec[2] -= 0.5;
 
+    _qd->setMotorThrust(moveVec);
 }
 
 void Scenario::moveRight()
 {
+    GMlib::Vector<float,4> moveVec = _qd->getMotorThrust();
+    moveVec[0] += 2.0; //diametrically opposite motor to the disired direction
+    moveVec[2] -= 0.5;
 
+    _qd->setMotorThrust(moveVec);
 }
 void Scenario::moveLeft()
 {
+    GMlib::Vector<float,4> moveVec = _qd->getMotorThrust();
+    moveVec[2] += 2.0; //diametrically opposite motor to the disired direction
+    moveVec[0] -= 0.5;
 
+    _qd->setMotorThrust(moveVec);
 }
-
-
-
-
-
