@@ -44,10 +44,12 @@ void Scenario::initializeScenario() {
   proj_rcpair.camera->set(init_cam_pos,init_cam_dir,init_cam_up);
   proj_rcpair.camera->setCuttingPlanes( 1.0f, 8000.0f );
   proj_rcpair.camera->rotateGlobal( GMlib::Angle(-45), GMlib::Vector<float,3>( 1.0f, 0.0f, 0.0f ) );
-  proj_rcpair.camera->translateGlobal( GMlib::Vector<float,3>( 0.0f, -50.0f, 50.0f ) );
-  //proj_rcpair.camera->translateGlobal( GMlib::Vector<float,3>( 0.0f, -20.0f, 20.0f ) );
+  proj_rcpair.camera->translateGlobal( GMlib::Vector<float,3>( 0.0f, -7.0f, 7.0f ) );
+  //proj_rcpair.camera->translateGlobal( GMlib::Vector<float,3>( 0.0f, -50.0f, 50.0f ) );
+  //proj_rcpair.camera->translateGlobal( GMlib::Vector<float,3>( 0.0f, -20.0f, 20.0f ) ); //orig
   scene()->insertCamera( proj_rcpair.camera.get() );
   proj_rcpair.renderer->reshape( GMlib::Vector<int,2>(init_viewport_size, init_viewport_size) );
+  proj_rcpair.renderer->setClearColor(GMlib::GMcolor::Black);
 
   // Front cam
   auto front_rcpair = createRCPair("Front");
@@ -69,9 +71,6 @@ void Scenario::initializeScenario() {
   top_rcpair.camera->setCuttingPlanes( 1.0f, 8000.0f );
   scene()->insertCamera( top_rcpair.camera.get() );
   top_rcpair.renderer->reshape( GMlib::Vector<int,2>(init_viewport_size, init_viewport_size) );
-
-
-
 
 
 
@@ -111,16 +110,16 @@ void Scenario::initializeScenario() {
 //  scene()->insert(cyl);
 
   //terrain
-  auto floor = new Terrain
-          (GMlib::Point<float,3>(-20,-10,0), GMlib::Vector<float,3>(0,70,0), GMlib::Vector<float,3>(40,0,0));
+  auto floor = new Terrain(GMlib::Point<float,3>(-3,-2,0), GMlib::Vector<float,3>(0,10,0), GMlib::Vector<float,3>(6,0,0));
   scene()->insert(floor);
 
   //quadcopter
-  _qd = new Quad(1,1.25,GMlib::Vector<float,3>(0,0,1));
+  _qd = std::make_shared<Quad>(0.1,1.25,GMlib::Vector<float,3>(0,0,1)); //rad, mass, vel
   //initQuad(quad);
   _qd->translateGlobal(GMlib::Vector<float,3>(0,0,1));
   //_qd->insert(sphere);
-  scene()->insert(_qd);
+  scene()->insert(_qd.get());
+
 
 
 
@@ -141,19 +140,19 @@ void Scenario::cleanupScenario() {
 
 }
 
-void Scenario::moveUp()
+void Scenario::moveUp() //uplift actually throttle
 {
     //_qd->translate(GMlib::Vector<float,3>(0,0,1)); //placeholder for checking
 
     GMlib::Vector<float,3> newVelVect = _qd->getVelocity();
-    if (newVelVect[2] < 8.0 && newVelVect[2] > -8.0)
+    if (newVelVect[2] < 3.0 && newVelVect[2] > -3.0)
     {
         if (newVelVect[2] < 0.0)
         {
             newVelVect[2] = 0.0;
         }
 
-        newVelVect[2] += 1.0;
+        newVelVect[2] += 0.1;
         newVelVect[1] *= 0.5;
         newVelVect[0] *= 0.5;
 
@@ -161,7 +160,7 @@ void Scenario::moveUp()
     }
     else
     {
-        while (newVelVect[2] >= 8.0 || newVelVect[2] <= -8.0)
+        while (newVelVect[2] >= 3.0 || newVelVect[2] <= -3.0)
         {
             newVelVect[2] *= 0.9;
             _qd->setVelocity(newVelVect);
@@ -177,7 +176,7 @@ void Scenario::moveUp()
 
 }
 
-void Scenario::moveDown() //will be used for prototype quadromovment
+void Scenario::moveDown() //will be used for prototype quadromovment //downfall
 {
     GMlib::Vector<float,4> moveVec = _qd->getMotorThrust();
     for (int i = 0; i < 4; i++)
@@ -187,7 +186,7 @@ void Scenario::moveDown() //will be used for prototype quadromovment
     _qd->setMotorThrust(moveVec);
 }
 
-void Scenario::moveForward()
+void Scenario::moveForward() //pitch
 {
     //_qd->switchDirRotors();
 
@@ -198,7 +197,7 @@ void Scenario::moveForward()
     _qd->setMotorThrust(moveVec);
 }
 
-void Scenario::moveBackward()
+void Scenario::moveBackward() //pitch
 {
     GMlib::Vector<float,4> moveVec = _qd->getMotorThrust();
     moveVec[1] += 2.0; //diametrically opposite motor to the disired direction
@@ -207,7 +206,7 @@ void Scenario::moveBackward()
     _qd->setMotorThrust(moveVec);
 }
 
-void Scenario::moveRight()
+void Scenario::moveRight() //roll
 {
     GMlib::Vector<float,4> moveVec = _qd->getMotorThrust();
     moveVec[0] += 2.0; //diametrically opposite motor to the disired direction
@@ -215,7 +214,7 @@ void Scenario::moveRight()
 
     _qd->setMotorThrust(moveVec);
 }
-void Scenario::moveLeft()
+void Scenario::moveLeft() //roll
 {
     GMlib::Vector<float,4> moveVec = _qd->getMotorThrust();
     moveVec[2] += 2.0; //diametrically opposite motor to the disired direction
@@ -223,3 +222,31 @@ void Scenario::moveLeft()
 
     _qd->setMotorThrust(moveVec);
 }
+
+//need 2 for yaw
+void Scenario::yawLeft() //yaw
+{
+    GMlib::Vector<float,4> moveVec = _qd->getMotorThrust();
+
+    moveVec[2] *= 1.1;
+    moveVec[0] *= 1.1;
+
+    moveVec[1] *= 0.1;
+    moveVec[3] *= 0.1;
+
+    _qd->setMotorThrust(moveVec);
+}
+
+void Scenario::yawRight() //yaw
+{
+    GMlib::Vector<float,4> moveVec = _qd->getMotorThrust();
+
+    moveVec[1] *= 1.1;
+    moveVec[3] *= 1.1;
+
+    moveVec[0] *= 0.1;
+    moveVec[2] *= 0.1;
+
+    _qd->setMotorThrust(moveVec);
+}
+

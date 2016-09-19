@@ -80,6 +80,7 @@ set( HDRS
   rotor.h
   motor.h
   quad.h
+  controller.h
   scenario.h
 
   )
@@ -105,7 +106,7 @@ set( SRCS
   rotor.cpp
   motor.cpp
   quad.cpp
-
+  controller.cpp
   scenario.cpp
 
 

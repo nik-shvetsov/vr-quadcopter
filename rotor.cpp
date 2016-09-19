@@ -3,7 +3,7 @@
 #include <QDebug>
 
   Rotor::Rotor(float velocityRot, int direction)
-      :GMlib::PCylinder<float>(0.04,0.09,1.5) //rx,ry,length
+      :GMlib::PCylinder<float>(0.04*0.1,0.09*0.1,1.5*0.1) //rx,ry,length
   {
       this->_velocity = GMlib::Vector<float,3> (0,0,0);
       this->_velocityRot = velocityRot; //0-90

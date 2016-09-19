@@ -24,13 +24,17 @@ public:
   void moveLeft();
   void moveForward();
   void moveBackward();
+  void yawRight();
+  void yawLeft();
 
   //void    keyPressed(const QString& name, QKeyEvent* event);
   //void  initQuad( Quad& quad );
 
 private:
 
-  Quad* _qd {nullptr};
+  //Quad* _qd {nullptr};
+  std::shared_ptr<Quad> _qd;
+
   //std::vector<float>* _moveVec;
 
 };

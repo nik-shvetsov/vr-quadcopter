@@ -46,6 +46,12 @@ private:
   std::vector<Motor*> _motors {};
   std::vector<Rotor*> _rotors {};
 
+  //values for movment
+  const double _Ct = (86.0e-7);
+  const double _Cq = (18.0e-8);
+  const GMlib::Vector<float,3> _g = GMlib::Vector<float,3> (0.0, 0.0, -9.81);
+
+  GMlib::SqMatrix<double,3> _inMatr;
 
 }; // END class
 

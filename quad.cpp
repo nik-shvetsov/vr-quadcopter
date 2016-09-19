@@ -9,20 +9,22 @@
       this->_mass = mass;
       this->_velocity = velocity;
 
+      //this->setSurroundingSphere(GMlib::Sphere<float,3>(100.0f));
+
       this->toggleDefaultVisualizer();
       this->replot(200,200,1,1);
       this->setMaterial(GMlib::GMmaterial::Chrome);
 
-      float stSize = 5; //0.3-0.5
+      float stSize = 0.5; //0.3-0.5 //5
 
-      auto stSN = new GMlib::PCylinder<float>(0.1,0.1,stSize);
+      auto stSN = new GMlib::PCylinder<float>(0.01,0.01,stSize); //0.1
       stSN->toggleDefaultVisualizer();
       stSN->replot(200,200,1,1);
       stSN->setMaterial(GMlib::GMmaterial::Plastic);
       this->insert(stSN);
       stSN->rotateGlobal(GMlib::Angle(90), GMlib::Vector<float,3>(0,1,0));
 
-      auto stEW = new GMlib::PCylinder<float>(0.1,0.1,stSize);
+      auto stEW = new GMlib::PCylinder<float>(0.01,0.01,stSize); //0.1
       stEW->toggleDefaultVisualizer();
       stEW->replot(200,200,1,1);
       stEW->setMaterial(GMlib::GMmaterial::Plastic);
@@ -30,7 +32,7 @@
       stEW->rotateGlobal(GMlib::Angle(90), GMlib::Vector<float,3>(1,0,0));
 
 
-      float motorSize = 0.5;
+      float motorSize = 0.05; //0.5
       auto motor1 = new Motor(motorSize, 0);
       _motors.push_back(motor1);
       auto motor2 = new Motor(motorSize, 0);
@@ -56,11 +58,12 @@
       }
 
       //rotors
+      float upZ = 0.04 * 0.1;
       std::vector<GMlib::Vector<float,3>> translateVecRt;
-      translateVecRt.push_back(GMlib::Vector<float,3>(-stSize/2,0,motorSize+0.04));
-      translateVecRt.push_back(GMlib::Vector<float,3>(0,-stSize/2,motorSize+0.04));
-      translateVecRt.push_back(GMlib::Vector<float,3>(stSize/2,0, motorSize+0.04));
-      translateVecRt.push_back(GMlib::Vector<float,3>(0,stSize/2,motorSize+0.04));
+      translateVecRt.push_back(GMlib::Vector<float,3>(-stSize/2,0,motorSize+upZ));
+      translateVecRt.push_back(GMlib::Vector<float,3>(0,-stSize/2,motorSize+upZ));
+      translateVecRt.push_back(GMlib::Vector<float,3>(stSize/2,0, motorSize+upZ));
+      translateVecRt.push_back(GMlib::Vector<float,3>(0,stSize/2,motorSize+upZ));
 
       auto rotor1 = new Rotor(30, -1);
       _rotors.push_back(rotor1);
@@ -81,6 +84,21 @@
           _rotors[i]->rotate(GMlib::Angle(90), GMlib::Vector<float,3>(0,1,0));
           this->insert(_rotors[i]);
       }
+
+
+      //preparing values
+      _inMatr[0][0] = 0.047316;
+      _inMatr[0][1] = 0;
+      _inMatr[0][2] = 0;
+
+      _inMatr[1][0] = 0;
+      _inMatr[1][1] = 0.047316;
+      _inMatr[1][2] = 0;
+
+      _inMatr[2][0] = 0;
+      _inMatr[2][1] = 0;
+      _inMatr[2][2] = 0.539632;
+
   }
 
   Quad::~Quad() {}
@@ -155,9 +173,6 @@
     }
 
 
-
-
-
   void Quad::localSimulate(double dt)
   {
     //rotateGlobal(GMlib::Angle(_dS.getLength()/this->getRadius()), this->getSurfNormal()^_dS);
@@ -171,4 +186,8 @@
 
     computeStep(dt);
     this->translate(_dS);
+
+     //set(); //for rotation
+    //translate(V*dt); //for translation
+
   }
