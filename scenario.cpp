@@ -45,6 +45,7 @@ void Scenario::initializeScenario() {
   proj_rcpair.camera->setCuttingPlanes( 1.0f, 8000.0f );
   proj_rcpair.camera->rotateGlobal( GMlib::Angle(-45), GMlib::Vector<float,3>( 1.0f, 0.0f, 0.0f ) );
   proj_rcpair.camera->translateGlobal( GMlib::Vector<float,3>( 0.0f, -7.0f, 7.0f ) );
+  proj_rcpair.camera->enableCulling(false);
   //proj_rcpair.camera->translateGlobal( GMlib::Vector<float,3>( 0.0f, -50.0f, 50.0f ) );
   //proj_rcpair.camera->translateGlobal( GMlib::Vector<float,3>( 0.0f, -20.0f, 20.0f ) ); //orig
   scene()->insertCamera( proj_rcpair.camera.get() );
@@ -73,8 +74,6 @@ void Scenario::initializeScenario() {
   top_rcpair.renderer->reshape( GMlib::Vector<int,2>(init_viewport_size, init_viewport_size) );
 
 
-
-
   // Surface visualizers
   //auto surface_visualizer = new GMlib::PSurfNormalsVisualizer<float,3>;
   //auto surface_visualizer = new GMlib::PSurfParamLinesVisualizer<float,3>;
@@ -90,69 +89,41 @@ void Scenario::initializeScenario() {
 
   //adding my objects
 
-  //check sphere
-//  GMlib::PSphere<float>* sphere = new GMlib::PSphere<float>(1.0);
-//  sphere->insertVisualizer(surface_visualizer);
-//  sphere->replot(200,200,1,1);
-//  sphere->translateGlobal(GMlib::Vector<float,3>(0,0,1.0));
-//  sphere->setMaterial(GMlib::GMmaterial::Obsidian);
-//  scene()->insert(sphere);
-
-
-
-
-//  GMlib::PLine<float>* cyl = new GMlib::PLine<float>(GMlib::Point<float,3>(0,0,0), GMlib::Vector<float,3>(-7,0,0));
-//  cyl->toggleDefaultVisualizer();
-//  cyl->replot(0,2);
-//  cyl->setColor(GMlib::GMcolor::Black);
-//  cyl->translateGlobal(GMlib::Vector<float,3>(-10,0,1.0));
-//  cyl->setMaterial(GMlib::GMmaterial::Obsidian);
-//  scene()->insert(cyl);
-
   //terrain
   auto floor = new Terrain(GMlib::Point<float,3>(-3,-2,0), GMlib::Vector<float,3>(0,10,0), GMlib::Vector<float,3>(6,0,0));
   scene()->insert(floor);
 
   //quadcopter
-  _qd = std::make_shared<Quad>(0.1,1.25,GMlib::Vector<float,3>(0,0,1)); //rad, mass, vel
-  //initQuad(quad);
+  _qd = std::make_shared<Quad>(0.1,1.25,GMlib::Vector<float,3>(0,0,1.0)); //rad, mass, vel
   _qd->translateGlobal(GMlib::Vector<float,3>(0,0,1));
-  //_qd->insert(sphere);
   scene()->insert(_qd.get());
 
 
-
-
-  //_qd->translateGlobal(GMlib::Vector<float,3>(0,10,5));
-
-
-//  auto cl1 = new Rotor(GMlib::Vector<float,3>(0,0,0), 1);
-//  cl1->toggleDefaultVisualizer();
-//  cl1->replot(200,200,1,1);
-//  cl1->translateGlobal(GMlib::Vector<float,3>(5,-5,3.0));
-//  cl1->setMaterial(GMlib::GMmaterial::Obsidian);
-//  cl1->rotate(GMlib::Angle(90), GMlib::Vector<float,3>(0,1,0));
-//  scene()->insert(cl1);
-
+//  auto trajectory = new GMlib::PLine<float>(GMlib::Point<float,3>(0,0,0), GMlib::Point<float,3> (2,2,2));
+//  trajectory ->toggleDefaultVisualizer();
+//  trajectory->replot(1,1);
+//  trajectory ->setMaterial(GMlib::GMmaterial::PolishedRed);
+//  scene()->insert(trajectory);
 }
 
 void Scenario::cleanupScenario() {
 
 }
 
+
 void Scenario::moveUp() //uplift actually throttle
 {
     //_qd->translate(GMlib::Vector<float,3>(0,0,1)); //placeholder for checking
 
     GMlib::Vector<float,3> newVelVect = _qd->getVelocity();
-    if (newVelVect[2] < 3.0 && newVelVect[2] > -3.0)
+    if (newVelVect[2] < 10.0 && newVelVect[2] > -10.0)
     {
         if (newVelVect[2] < 0.0)
         {
             newVelVect[2] = 0.0;
         }
 
-        newVelVect[2] += 0.1;
+        newVelVect[2] += 0.9;
         newVelVect[1] *= 0.5;
         newVelVect[0] *= 0.5;
 
@@ -160,7 +131,7 @@ void Scenario::moveUp() //uplift actually throttle
     }
     else
     {
-        while (newVelVect[2] >= 3.0 || newVelVect[2] <= -3.0)
+        while (newVelVect[2] >= 10.0 || newVelVect[2] <= -10.0)
         {
             newVelVect[2] *= 0.9;
             _qd->setVelocity(newVelVect);
@@ -176,77 +147,88 @@ void Scenario::moveUp() //uplift actually throttle
 
 }
 
+/*
+void Scenario::moveUp() //for method 2
+{
+    std::vector<Rotor*> rotors = _qd->getRotors();
+    rotors[0]->setVelocityRot(rotors[0]->getVelocityRot()+10);
+    rotors[1]->setVelocityRot(rotors[1]->getVelocityRot()+10);
+    rotors[2]->setVelocityRot(rotors[2]->getVelocityRot()+10);
+    rotors[3]->setVelocityRot(rotors[3]->getVelocityRot()+10);
+}
+*/
+
 void Scenario::moveDown() //will be used for prototype quadromovment //downfall
 {
-    GMlib::Vector<float,4> moveVec = _qd->getMotorThrust();
+    //GMlib::Vector<float,4> moveVec = _qd->getMotorThrust();
     for (int i = 0; i < 4; i++)
     {
-        moveVec[i] -= 1.0; //value?
+        //moveVec[i] -= 1.0; //value?
     }
-    _qd->setMotorThrust(moveVec);
+   // _qd->setMotorThrust(moveVec);
 }
 
 void Scenario::moveForward() //pitch
 {
     //_qd->switchDirRotors();
 
-    GMlib::Vector<float,4> moveVec = _qd->getMotorThrust();
-    moveVec[2] += 2.0; //diametrically opposite motor to the disired direction
-    moveVec[1] -= 0.5;
+    //GMlib::Vector<float,4> moveVec = _qd->getMotorThrust();
+    //moveVec[2] += 2.0; //diametrically opposite motor to the disired direction
+    //moveVec[1] -= 0.5;
 
-    _qd->setMotorThrust(moveVec);
+    //_qd->setMotorThrust(moveVec);
 }
 
 void Scenario::moveBackward() //pitch
 {
-    GMlib::Vector<float,4> moveVec = _qd->getMotorThrust();
-    moveVec[1] += 2.0; //diametrically opposite motor to the disired direction
-    moveVec[2] -= 0.5;
+    //GMlib::Vector<float,4> moveVec = _qd->getMotorThrust();
+    //moveVec[1] += 2.0; //diametrically opposite motor to the disired direction
+    //moveVec[2] -= 0.5;
 
-    _qd->setMotorThrust(moveVec);
+    //_qd->setMotorThrust(moveVec);
 }
 
 void Scenario::moveRight() //roll
 {
-    GMlib::Vector<float,4> moveVec = _qd->getMotorThrust();
-    moveVec[0] += 2.0; //diametrically opposite motor to the disired direction
-    moveVec[2] -= 0.5;
+    //GMlib::Vector<float,4> moveVec = _qd->getMotorThrust();
+    //moveVec[0] += 2.0; //diametrically opposite motor to the disired direction
+    //moveVec[2] -= 0.5;
 
-    _qd->setMotorThrust(moveVec);
+    //_qd->setMotorThrust(moveVec);
 }
 void Scenario::moveLeft() //roll
 {
-    GMlib::Vector<float,4> moveVec = _qd->getMotorThrust();
-    moveVec[2] += 2.0; //diametrically opposite motor to the disired direction
-    moveVec[0] -= 0.5;
+    //GMlib::Vector<float,4> moveVec = _qd->getMotorThrust();
+    //moveVec[2] += 2.0; //diametrically opposite motor to the disired direction
+    //moveVec[0] -= 0.5;
 
-    _qd->setMotorThrust(moveVec);
+    //_qd->setMotorThrust(moveVec);
 }
 
 //need 2 for yaw
 void Scenario::yawLeft() //yaw
 {
-    GMlib::Vector<float,4> moveVec = _qd->getMotorThrust();
+    //GMlib::Vector<float,4> moveVec = _qd->getMotorThrust();
 
-    moveVec[2] *= 1.1;
-    moveVec[0] *= 1.1;
+    //moveVec[2] *= 1.1;
+    //moveVec[0] *= 1.1;
 
-    moveVec[1] *= 0.1;
-    moveVec[3] *= 0.1;
+    //moveVec[1] *= 0.1;
+    //moveVec[3] *= 0.1;
 
-    _qd->setMotorThrust(moveVec);
-}
+    //_qd->setMotorThrust(moveVec);
+}//
 
 void Scenario::yawRight() //yaw
 {
-    GMlib::Vector<float,4> moveVec = _qd->getMotorThrust();
+    //GMlib::Vector<float,4> moveVec = _qd->getMotorThrust();
 
-    moveVec[1] *= 1.1;
-    moveVec[3] *= 1.1;
+    //moveVec[1] *= 1.1;
+    //moveVec[3] *= 1.1;
 
-    moveVec[0] *= 0.1;
-    moveVec[2] *= 0.1;
+    //moveVec[0] *= 0.1;
+    //moveVec[2] *= 0.1;
 
-    _qd->setMotorThrust(moveVec);
+    //_qd->setMotorThrust(moveVec);
 }
 

@@ -79,6 +79,7 @@ set( HDRS
   terrain.h
   rotor.h
   motor.h
+  frame.h
   quad.h
   controller.h
   scenario.h
@@ -105,6 +106,7 @@ set( SRCS
   terrain.cpp
   rotor.cpp
   motor.cpp
+  frame.cpp
   quad.cpp
   controller.cpp
   scenario.cpp

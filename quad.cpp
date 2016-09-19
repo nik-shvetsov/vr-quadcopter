@@ -1,4 +1,5 @@
 #include "quad.h"
+#include <cmath>
 
 #include <QDebug>
 
@@ -15,16 +16,16 @@
       this->replot(200,200,1,1);
       this->setMaterial(GMlib::GMmaterial::Chrome);
 
-      float stSize = 0.5; //0.3-0.5 //5
+      _stSize = 0.5; //0.3-0.5 //5
 
-      auto stSN = new GMlib::PCylinder<float>(0.01,0.01,stSize); //0.1
+      auto stSN = new GMlib::PCylinder<float>(0.01,0.01,_stSize); //0.1
       stSN->toggleDefaultVisualizer();
       stSN->replot(200,200,1,1);
       stSN->setMaterial(GMlib::GMmaterial::Plastic);
       this->insert(stSN);
       stSN->rotateGlobal(GMlib::Angle(90), GMlib::Vector<float,3>(0,1,0));
 
-      auto stEW = new GMlib::PCylinder<float>(0.01,0.01,stSize); //0.1
+      auto stEW = new GMlib::PCylinder<float>(0.01,0.01,_stSize); //0.1
       stEW->toggleDefaultVisualizer();
       stEW->replot(200,200,1,1);
       stEW->setMaterial(GMlib::GMmaterial::Plastic);
@@ -33,20 +34,20 @@
 
 
       float motorSize = 0.05; //0.5
-      auto motor1 = new Motor(motorSize, 0);
+      auto motor1 = new Motor(motorSize); //10
       _motors.push_back(motor1);
-      auto motor2 = new Motor(motorSize, 0);
+      auto motor2 = new Motor(motorSize);
       _motors.push_back(motor2);
-      auto motor3 = new Motor(motorSize, 0);
+      auto motor3 = new Motor(motorSize);
       _motors.push_back(motor3);
-      auto motor4 = new Motor(motorSize, 0);
+      auto motor4 = new Motor(motorSize);
       _motors.push_back(motor4);
 
       std::vector<GMlib::Vector<float,3>> translateVecSt;
-      translateVecSt.push_back(GMlib::Vector<float,3>(-stSize/2,0,0));
-      translateVecSt.push_back(GMlib::Vector<float,3>(0,-stSize/2,0));
-      translateVecSt.push_back(GMlib::Vector<float,3>(stSize/2,0,0));
-      translateVecSt.push_back(GMlib::Vector<float,3>(0,stSize/2,0));
+      translateVecSt.push_back(GMlib::Vector<float,3>(-_stSize/2,0,0));
+      translateVecSt.push_back(GMlib::Vector<float,3>(0,-_stSize/2,0));
+      translateVecSt.push_back(GMlib::Vector<float,3>(_stSize/2,0,0));
+      translateVecSt.push_back(GMlib::Vector<float,3>(0,_stSize/2,0));
 
       for (int i = 0; i < (int)_motors.size(); i++)
       {
@@ -60,18 +61,18 @@
       //rotors
       float upZ = 0.04 * 0.1;
       std::vector<GMlib::Vector<float,3>> translateVecRt;
-      translateVecRt.push_back(GMlib::Vector<float,3>(-stSize/2,0,motorSize+upZ));
-      translateVecRt.push_back(GMlib::Vector<float,3>(0,-stSize/2,motorSize+upZ));
-      translateVecRt.push_back(GMlib::Vector<float,3>(stSize/2,0, motorSize+upZ));
-      translateVecRt.push_back(GMlib::Vector<float,3>(0,stSize/2,motorSize+upZ));
+      translateVecRt.push_back(GMlib::Vector<float,3>(-_stSize/2,0,motorSize+upZ));
+      translateVecRt.push_back(GMlib::Vector<float,3>(0,-_stSize/2,motorSize+upZ));
+      translateVecRt.push_back(GMlib::Vector<float,3>(_stSize/2,0, motorSize+upZ));
+      translateVecRt.push_back(GMlib::Vector<float,3>(0,_stSize/2,motorSize+upZ));
 
-      auto rotor1 = new Rotor(30, -1);
+      auto rotor1 = new Rotor(0, -1);
       _rotors.push_back(rotor1);
-      auto rotor2 = new Rotor(30, 1);
+      auto rotor2 = new Rotor(0, 1);
       _rotors.push_back(rotor2);
-      auto rotor3 = new Rotor(30, -1);
+      auto rotor3 = new Rotor(0, -1);
       _rotors.push_back(rotor3);
-      auto rotor4 = new Rotor(30, 1);
+      auto rotor4 = new Rotor(0, 1);
       _rotors.push_back(rotor4);
 
 
@@ -99,13 +100,68 @@
       _inMatr[2][1] = 0;
       _inMatr[2][2] = 0.539632;
 
+      //
+
+      _invInMatr = _inMatr;
+      _invInMatr.invert();
+
+      //
+
+      _rotMatr[0][0] = 1.0;
+      _rotMatr[0][1] = 0;
+      _rotMatr[0][2] = 0;
+
+      _rotMatr[1][0] = 0;
+      _rotMatr[1][1] = 1.0;
+      _rotMatr[1][2] = 0;
+
+      _rotMatr[2][0] = 0;
+      _rotMatr[2][1] = 0;
+      _rotMatr[2][2] = 1.0;
+      //
+      _dotRotMatr[0][0] = 0;
+      _dotRotMatr[0][1] = 0;
+      _dotRotMatr[0][2] = 0;
+
+      _dotRotMatr[1][0] = 0;
+      _dotRotMatr[1][1] = 0;
+      _dotRotMatr[1][2] = 0;
+
+      _dotRotMatr[2][0] = 0;
+      _dotRotMatr[2][1] = 0;
+      _dotRotMatr[2][2] = 0;
+
+      //
+
+      _angVel = GMlib::Vector<double,3> (0,0,0);
+      _dotAngVel = GMlib::Vector<double,3> (0,0,0);
+      _torq = GMlib::Vector<double,3> (0,0,0);
+
+      //
+
+      _angVelMatX[0][0] = 0;
+      _angVelMatX[0][1] = -1.0 * _angVel[2];
+      _angVelMatX[0][2] = _angVel[1];
+
+      _angVelMatX[1][0] = _angVel[2];
+      _angVelMatX[1][1] = 0;
+      _angVelMatX[1][2] = _angVel[0];
+
+      _angVelMatX[2][0] = -1.0 * _angVel[1];
+      _angVelMatX[2][1] = _angVel[0];
+      _angVelMatX[2][2] = 0;
+
+
+      _dS = GMlib::Vector<float,3> (0,0,0);
+
+
   }
 
   Quad::~Quad() {}
 
 //methods for setting Quad properties
 
-    void Quad::setVelocity(const GMlib::Vector<float,3> velocity)
+    void Quad::setVelocity(GMlib::Vector<float,3> velocity)
     {
         _velocity = velocity;
     }
@@ -131,24 +187,29 @@
         return _position;
     }
 
-    void Quad::setMotorThrust(GMlib::Vector<float,4> thrustvec) //&
+//    void Quad::setMotorThrust(GMlib::Vector<float,4> thrustvec) //&
+//    {
+//        for (int i = 0; i < 4; i++)
+//        {
+//            _motors[i]->setThrust(thrustvec[i]);
+//        }
+//    }
+
+//    GMlib::Vector<float,4> Quad::getMotorThrust()
+//    {
+//        GMlib::Vector<float,4> thrustvec;
+
+//        for (int i = 0; i < 4; i++)
+//        {
+//            thrustvec[i] = _motors[i]->getThrust();
+//        }
+
+//        return thrustvec;
+//    }
+
+    std::vector<Rotor*> Quad::getRotors()
     {
-        for (int i = 0; i < 4; i++)
-        {
-            _motors[i]->setThrust(thrustvec[i]);
-        }
-    }
-
-    GMlib::Vector<float,4> Quad::getMotorThrust()
-    {
-        GMlib::Vector<float,4> thrustvec;
-
-        for (int i = 0; i < 4; i++)
-        {
-            thrustvec[i] = _motors[i]->getThrust();
-        }
-
-        return thrustvec;
+        return _rotors;
     }
 
     void Quad::switchDirRotors()
@@ -162,32 +223,83 @@
 
     void Quad::computeStep(double dt)
     {
-        static auto g = GMlib::Vector<float,3>(0,0,-1); //-9.8
-        _dS = dt * _velocity + 0.5 * dt * dt * g;
-        _velocity+=dt*g;
+        _dS = (dt * _velocity + 0.5 * dt * dt * _g);
+
+        if (this->getPosition()[2] <= _radius) //ad hoc collision with terrain
+        {
+            _dS[2] = 0;
+            _velocity[2] = 0;
+        }
+
+
+        _velocity = (dt*_velocity + dt*_g);
+
+        qDebug() << _velocity[0] << "  " << _velocity[1] << "  " << _velocity[2];
     }
 
-    void Quad::computeFly(double dt)
+    void Quad::computeFlyStep(double dt)
     {
+        //------------------------------------
+        float thrustSum = 0;
+        GMlib::Vector<float,4> w;
+        GMlib::Vector<float,4> w_pow;
+        for (int i = 0; i < 4; i++)
+        {
+            w[i] = _rotors[i]->getVelocityRot();
+            w_pow[i] = pow(_rotors[i]->getVelocityRot(),2);
+            thrustSum += w_pow[i];
+        }
+        //qDebug() << w_pow[0] << " " << w_pow[1] << " " << w_pow[2] << " " << w_pow[3] << " ";
+        thrustSum *= _Ct;
+        //qDebug() << thrustSum;
+        //------------------------------------
 
+       auto globalMatrix = this->getMatrixGlobal();
+       globalMatrix.invert();
+
+       auto gravLVec = globalMatrix *_g;
+       auto localF = GMlib::Vector<float,3>(0,0,thrustSum);
+
+       _dS = gravLVec + (1/_mass) * localF;
+
+       _rotMatr += _dotRotMatr*dt;
+
+       _dotRotMatr = _rotMatr * _angVelMatX;
+
+       _angVel += _dotAngVel*dt;
+
+       _dotAngVel = _invInMatr * (_torq - (_angVel ^ (_inMatr*_angVel)));
+
+       float d = _stSize/2;
+
+       _torq[0] = d * _Ct * (pow(_rotors[1]->getVelocityRot(),2)-(_rotors[3]->getVelocityRot(),2));
+       _torq[1] = d * _Ct * (pow(_rotors[0]->getVelocityRot(),2)-pow(_rotors[2]->getVelocityRot(),2));
+       _torq[2] = _Cq * (-1 * pow(_rotors[0]->getVelocityRot(),2) + pow(_rotors[1]->getVelocityRot(),2) -
+               pow(_rotors[2]->getVelocityRot(),2) + pow(_rotors[3]->getVelocityRot(),2));
     }
 
 
   void Quad::localSimulate(double dt)
   {
-    //rotateGlobal(GMlib::Angle(_dS.getLength()/this->getRadius()), this->getSurfNormal()^_dS);
-    //rotateParent(_dS.getLength(), this->getGlobalPos(), this->getSurfNormal()^_dS);
-
-    //rotate(GMlib::Angle(2), GMlib::Vector<float,3>(0,0,1));
-
-    //qDebug() << _dS[0] << " " << _dS[1] << " " << _dS[2];
-    //getPosition();
-    //qDebug() << _position[0] << " " << _position[1] << " " << _position[2];
-
     computeStep(dt);
     this->translate(_dS);
 
-     //set(); //for rotation
-    //translate(V*dt); //for translation
+    //-------------------------------2nd method
+//    computeFlyStep(dt);
 
+//    _pos = this->getPosition();
+//    _dir = GMlib::Vector<float, 3>(_rotMatr[0][0], _rotMatr[0][1], _rotMatr[0][2]);
+//    _up = GMlib::Vector<float, 3>(_rotMatr[2][0], _rotMatr[2][1], _rotMatr[2][2]);
+
+//    this->set(_pos,_dir,_up);
+
+//    if ((this->getPos() + _dS)[2] > 0 || _dS[2] > 0) //check for stationary position
+//    {
+//        this->translate(_dS); //translate(V*dt); //for translation
+
+//    }
+
+//    qDebug() << _dS[0] << " " << _dS[1] << " " << _dS[2];
+
+    //----------------------------------------
   }

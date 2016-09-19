@@ -27,7 +27,7 @@ public:
   void yawRight();
   void yawLeft();
 
-  //void    keyPressed(const QString& name, QKeyEvent* event);
+  //void  keyPressed(const QString& name, QKeyEvent* event);
   //void  initQuad( Quad& quad );
 
 private:

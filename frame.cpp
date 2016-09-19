@@ -1,29 +1,26 @@
-#include "motor.h"
+#include "frame.h"
 
 #include <QDebug>
 
-  Motor::Motor(double radius)
+  Frame::Frame(double radius)
       :GMlib::PSphere<float>(radius)
   {
       this->_radius = radius;
-      //this->_thrust = thrust;
+
+
+
+
+
+
+
+
+
+
   }
 
-  Motor::~Motor() {}
+  Frame::~Frame() {}
 
-//methods for setting Motor properties
-
-//    void Motor::setThrust(float thrust)
-//    {
-//        _thrust = thrust;
-//    }
-
-//    float Motor::getThrust()
-//    {
-//        return _thrust;
-//    }
-
-  void Motor::localSimulate(double dt)
+  void Frame::localSimulate(double dt)
   {
     //rotateGlobal(GMlib::Angle(_dS.getLength()/this->getRadius()), this->getSurfNormal()^_dS);
     //rotateParent(_dS.getLength(), this->getGlobalPos(), this->getSurfNormal()^_dS);

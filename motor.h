@@ -9,19 +9,19 @@ class Motor : public GMlib::PSphere<float> {
     GM_SCENEOBJECT(Motor)
 
 public:
-  Motor(double radius, float thrust);
+  Motor(double radius);
   ~Motor();
 
 //methods for quad properties
 
-    void setThrust(float thrust);
-    float getThrust();
+    //void setThrust(float thrust);
+    //float getThrust();
 
 protected:
   void localSimulate(double dt);
 
 private:
-  float _thrust;
+  //float _thrust;
 
 }; // END class
 #endif // MOTOR_H
