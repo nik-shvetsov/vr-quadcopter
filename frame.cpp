@@ -26,6 +26,8 @@
       stEW->setMaterial(GMlib::GMmaterial::Plastic);
       this->insert(stEW);
       stEW->rotateGlobal(GMlib::Angle(90), GMlib::Vector<float,3>(1,0,0));
+
+      _dS = GMlib::Vector<float,3> (0,0,0);
   }
 
   Frame::~Frame() {}
@@ -40,6 +42,4 @@
     //rotateGlobal(GMlib::Angle(_dS.getLength()/this->getRadius()), this->getSurfNormal()^_dS);
     //rotateParent(_dS.getLength(), this->getGlobalPos(), this->getSurfNormal()^_dS);
 
-    //this->translateParent(_dS);
-    //computeStep(dt);
   }

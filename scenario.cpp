@@ -3,6 +3,7 @@
 #include "testtorus.h"
 #include "quad.h"
 #include "terrain.h"
+#include "skybox.h"
 #include "textureloader.h"
 
 //// hidmanager
@@ -74,6 +75,8 @@ void Scenario::initializeScenario() {
   scene()->insertCamera( top_rcpair.camera.get() );
   top_rcpair.renderer->reshape( GMlib::Vector<int,2>(init_viewport_size, init_viewport_size) );
 
+  //Follow cam
+
 
   // Surface visualizers
   //auto surface_visualizer = new GMlib::PSurfNormalsVisualizer<float,3>;
@@ -90,15 +93,26 @@ void Scenario::initializeScenario() {
 
   //adding my objects
 
+  //controller
+  //
+
   //terrain
   auto floor = new Terrain(GMlib::Point<float,3>(-3,-2,0), GMlib::Vector<float,3>(0,10,0), GMlib::Vector<float,3>(6,0,0));
   scene()->insert(floor);
 
+  //skybox
+  auto skybox = new Skybox(1000.0f);
+  scene()->insert(skybox);
+
+  //walls
+  //
 
   //quadcopter
   _qd = std::make_shared<Quad>(1.25, GMlib::Vector<float,3>(0,0,0.0)); //mass, vel
   _qd->translateGlobal(GMlib::Vector<float,3>(0,0,1));
   scene()->insert(_qd.get());
+
+  //tests
 
 
 //  auto trajectory = new GMlib::PLine<float>(GMlib::Point<float,3>(0,0,0), GMlib::Point<float,3> (2,2,2));

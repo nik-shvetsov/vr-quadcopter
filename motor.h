@@ -23,11 +23,17 @@ public:
     void setVelocity(GMlib::Vector<float,3> vel);
     GMlib::Vector<float,3> getVelocity();
 
+    float getTotalThrust();
+    GMlib::Vector<float,3> getDs();
+
 protected:
   void localSimulate(double dt);
 
 private:
-  const GMlib::Vector<float,3> _g = GMlib::Vector<float,3> (0,0,-9.81);
+  const GMlib::Vector<float,3> _g = GMlib::Vector<float,3> (0.0, 0.0, -9.81); //-9.81
+
+  const float adjDt = 0.2;
+
   float _thrust;
   Rotor* _rotor;
 

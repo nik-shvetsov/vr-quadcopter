@@ -18,9 +18,5 @@
 
   void Terrain::localSimulate(double dt)
   {
-    //rotateGlobal(GMlib::Angle(_dS.getLength()/this->getRadius()), this->getSurfNormal()^_dS);
-    //rotateParent(_dS.getLength(), this->getGlobalPos(), this->getSurfNormal()^_dS);
 
-    //this->translateParent(_dS);
-    //computeStep(dt);
   }

@@ -168,25 +168,25 @@
         return _position;
     }
 
-//    void Quad::setMotorThrust(GMlib::Vector<float,4> thrustvec) //&
-//    {
-//        for (int i = 0; i < 4; i++)
-//        {
-//            _motors[i]->setThrust(thrustvec[i]);
-//        }
-//    }
+    void Quad::setMotorThrust(GMlib::Vector<float,4> thrustvec) //&
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            _motors[i]->setThrust(thrustvec[i]);
+        }
+    }
 
-//    GMlib::Vector<float,4> Quad::getMotorThrust()
-//    {
-//        GMlib::Vector<float,4> thrustvec;
+    GMlib::Vector<float,4> Quad::getMotorThrust()
+    {
+        GMlib::Vector<float,4> thrustvec;
 
-//        for (int i = 0; i < 4; i++)
-//        {
-//            thrustvec[i] = _motors[i]->getThrust();
-//        }
+        for (int i = 0; i < 4; i++)
+        {
+            thrustvec[i] = _motors[i]->getThrust();
+        }
 
-//        return thrustvec;
-//    }
+        return thrustvec;
+    }
 
     void Quad::switchDirRotors()
     {
@@ -201,6 +201,15 @@
             //int direction = rot->getDir() * (-1); //_rotors[i]
             rot->setDir((rot->getDir() * (-1))); //direction
         }
+    }
+
+    GMlib::Vector<float,3> Quad::computeFrameDs()
+    {
+        GMlib::Vector<float,3> vec;
+
+        vec = (_motors[0]->getDs() + _motors[1]->getDs() + _motors[2]->getDs() + _motors[3]->getDs())/4;
+
+        return vec;
     }
 
     void Quad::computeStep(double dt)
@@ -224,7 +233,7 @@
          else _velocity = (dt*_velocity + dt*_g);
          */
 
-        qDebug() << _velocity[0] << "  " << _velocity[1] << "  " << _velocity[2];
+        //qDebug() << _velocity[0] << "  " << _velocity[1] << "  " << _velocity[2];
     }
 
     void Quad::computeFlyStep(double dt)
@@ -275,14 +284,15 @@
        _torq[0] = _d * _Ct * (pow(_rotors[1]->getVelocityRot(),2)-(_rotors[3]->getVelocityRot(),2));
        _torq[1] = _d * _Ct * (pow(_rotors[0]->getVelocityRot(),2)-pow(_rotors[2]->getVelocityRot(),2));
        _torq[2] = _Cq * (-1 * pow(_rotors[0]->getVelocityRot(),2) + pow(_rotors[1]->getVelocityRot(),2) -
-               pow(_rotors[2]->getVelocityRot(),2) + pow(_rotors[3]->getVelocityRot(),2));j*/
+               pow(_rotors[2]->getVelocityRot(),2) + pow(_rotors[3]->getVelocityRot(),2));*/
     }
 
 
   void Quad::localSimulate(double dt)
   {
-    computeStep(dt);
-    this->translate(_dS);
+    //computeStep(dt);
+    //this->translate(_dS);
+    _frame->translate(computeFrameDs());
 
     //-------------------------------2nd method
 //    //roll pitch yaw

@@ -1,7 +1,7 @@
 #include "textureloader.h"
 
-GMlib::PSurfTexVisualizer<float, 3>* TextureLoader::loadTexture(QString fileName) const {
-
+GMlib::PSurfTexVisualizer<float, 3>* TextureLoader::loadTexture(QString fileName) const
+{
     GMlib::PSurfTexVisualizer<float, 3>* visualizer = new GMlib::PSurfTexVisualizer<float, 3>;
 
     QImage img = QImage(fileName);

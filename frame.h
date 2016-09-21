@@ -20,6 +20,7 @@ protected:
 
 private:
   float _stSize;
+  GMlib::Vector<float,3> _dS;
 
 }; // END class
 

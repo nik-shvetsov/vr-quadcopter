@@ -53,15 +53,36 @@
         return _rotor;
     }
 
+    float Motor::getTotalThrust()
+    {
+        float force = std::sqrt( (1.25 * 9.81) / (4 * 86.0e-7) );
+        _thrust = force * 2 * adjDt;
+
+        return _thrust;
+    }
+
+//    float Motor::getVelRot()
+//    {
+//        this->getTotalThrust() / (2 * adjDt);
+//    }
+
+
+
     void Motor::computeStep(double dt)
     {
         _dS = (dt * _velocity + 0.5 * dt * dt * _g);
+        _velocity = dt*_g;
+    }
+
+    GMlib::Vector<float,3> Motor::getDs()
+    {
+        return this->_dS;
     }
 
 
   void Motor::localSimulate(double dt)
   {
-    //this->computeStep(dt);
-    //this->translate(_dS);
+    this->computeStep(dt);
+    this->translate(_dS);
 
   }
