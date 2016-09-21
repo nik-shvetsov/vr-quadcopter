@@ -34,9 +34,6 @@ private:
 
   //Quad* _qd {nullptr};
   std::shared_ptr<Quad> _qd;
-
-  //std::vector<float>* _moveVec;
-
 };
 
 #endif // SCENARIO_H

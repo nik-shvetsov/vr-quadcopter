@@ -82,6 +82,8 @@ set( HDRS
   frame.h
   quad.h
   controller.h
+  textureloader.h
+  skybox.h
   scenario.h
 
   )
@@ -109,6 +111,8 @@ set( SRCS
   frame.cpp
   quad.cpp
   controller.cpp
+  textureloader.cpp
+  skybox.cpp
   scenario.cpp
 
 

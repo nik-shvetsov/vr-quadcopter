@@ -5,7 +5,6 @@
   Rotor::Rotor(float velocityRot, int direction)
       :GMlib::PCylinder<float>(0.04*0.1,0.09*0.1,1.5*0.1) //rx,ry,length
   {
-      this->_velocity = GMlib::Vector<float,3> (0,0,0);
       this->_velocityRot = velocityRot; //0-90
       this->_direction = direction; //-1 or 1
   }
@@ -13,16 +12,6 @@
   Rotor::~Rotor() {}
 
 //methods for setting Rotor properties
-
-    void Rotor::setVelocity(const GMlib::Vector<float,3> velocity)
-    {
-        _velocity = velocity;
-    }
-
-    GMlib::Vector<float,3> Rotor::getVelocity()
-    {
-        return _velocity;
-    }
 
     void Rotor::setVelocityRot(float velocityRot)
     {

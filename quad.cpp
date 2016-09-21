@@ -3,36 +3,23 @@
 
 #include <QDebug>
 
-  Quad::Quad(double radius, double mass, GMlib::Vector<float,3> velocity)
-      :GMlib::PSphere<float>(radius)
+  Quad::Quad(double mass, GMlib::Vector<float,3> velocity)
+
   {
-      this->_radius = radius;
       this->_mass = mass;
       this->_velocity = velocity;
-
       //this->setSurroundingSphere(GMlib::Sphere<float,3>(100.0f));
 
-      this->toggleDefaultVisualizer();
-      this->replot(200,200,1,1);
-      this->setMaterial(GMlib::GMmaterial::Chrome);
+//      this->toggleDefaultVisualizer();
+//      this->replot(200,200,1,1);
+//      this->setMaterial(GMlib::GMmaterial::Chrome);
 
-      _stSize = 0.5; //0.3-0.5 //5
+      auto frame = new Frame(0.1);
+      this->_frame = frame;
+      this->insert(_frame);
 
-      auto stSN = new GMlib::PCylinder<float>(0.01,0.01,_stSize); //0.1
-      stSN->toggleDefaultVisualizer();
-      stSN->replot(200,200,1,1);
-      stSN->setMaterial(GMlib::GMmaterial::Plastic);
-      this->insert(stSN);
-      stSN->rotateGlobal(GMlib::Angle(90), GMlib::Vector<float,3>(0,1,0));
-
-      auto stEW = new GMlib::PCylinder<float>(0.01,0.01,_stSize); //0.1
-      stEW->toggleDefaultVisualizer();
-      stEW->replot(200,200,1,1);
-      stEW->setMaterial(GMlib::GMmaterial::Plastic);
-      this->insert(stEW);
-      stEW->rotateGlobal(GMlib::Angle(90), GMlib::Vector<float,3>(1,0,0));
-
-
+      _stSize = _frame->getStSize();
+      //motors
       float motorSize = 0.05; //0.5
       auto motor1 = new Motor(motorSize); //10
       _motors.push_back(motor1);
@@ -58,33 +45,26 @@
           this->insert(_motors[i]);
       }
 
-      //rotors
-      float upZ = 0.04 * 0.1;
-      std::vector<GMlib::Vector<float,3>> translateVecRt;
-      translateVecRt.push_back(GMlib::Vector<float,3>(-_stSize/2,0,motorSize+upZ));
-      translateVecRt.push_back(GMlib::Vector<float,3>(0,-_stSize/2,motorSize+upZ));
-      translateVecRt.push_back(GMlib::Vector<float,3>(_stSize/2,0, motorSize+upZ));
-      translateVecRt.push_back(GMlib::Vector<float,3>(0,_stSize/2,motorSize+upZ));
+      std::vector<Rotor*> rotors;
 
-      auto rotor1 = new Rotor(0, -1);
-      _rotors.push_back(rotor1);
-      auto rotor2 = new Rotor(0, 1);
-      _rotors.push_back(rotor2);
-      auto rotor3 = new Rotor(0, -1);
-      _rotors.push_back(rotor3);
-      auto rotor4 = new Rotor(0, 1);
-      _rotors.push_back(rotor4);
-
-
-      for (int i = 0; i < (int)_rotors.size(); i++)
+      //initializing rotor parameters
+      for (auto mot : _motors)
       {
-          _rotors[i]->toggleDefaultVisualizer();
-          _rotors[i]->replot(200,200,1,1);
-          _rotors[i]->setMaterial(GMlib::GMmaterial::BlackRubber);
-          _rotors[i]->translate(translateVecRt[i]);
-          _rotors[i]->rotate(GMlib::Angle(90), GMlib::Vector<float,3>(0,1,0));
-          this->insert(_rotors[i]);
+          rotors.push_back(mot->getRotor());
       }
+
+      for (int i = 0; i < 4; i++)
+      {
+          if (i%2==0) rotors[i]->setDir(-1);
+          else rotors[i]->setDir(1);
+
+          //rotors[i]->setVelocityRot(10);
+      }
+
+      //ended object manipulation--------------------------------------------------
+
+      _dS = GMlib::Vector<float, 3>(0, 0, 0);
+      _d = _stSize / 2.0;
 
 
       //preparing values
@@ -140,20 +120,16 @@
       //
 
       _angVelMatX[0][0] = 0;
-      _angVelMatX[0][1] = -1.0 * _angVel[2];
-      _angVelMatX[0][2] = _angVel[1];
+      _angVelMatX[0][1] = 0;//-1.0 * _angVel[2];
+      _angVelMatX[0][2] = 0;//_angVel[1];
 
-      _angVelMatX[1][0] = _angVel[2];
+      _angVelMatX[1][0] = 0;//_angVel[2];
       _angVelMatX[1][1] = 0;
-      _angVelMatX[1][2] = _angVel[0];
+      _angVelMatX[1][2] = 0;//_angVel[0];
 
-      _angVelMatX[2][0] = -1.0 * _angVel[1];
-      _angVelMatX[2][1] = _angVel[0];
+      _angVelMatX[2][0] = 0;//-1.0 * _angVel[1];
+      _angVelMatX[2][1] = 0;//_angVel[0];
       _angVelMatX[2][2] = 0;
-
-
-      _dS = GMlib::Vector<float,3> (0,0,0);
-
 
   }
 
@@ -174,6 +150,11 @@
     double Quad::getMass()
     {
         return _mass;
+    }
+
+    std::vector<Motor*> Quad::getMotors()
+    {
+        return _motors;
     }
 
     GMlib::Vector<float,3> Quad::getDs()
@@ -207,14 +188,15 @@
 //        return thrustvec;
 //    }
 
-    std::vector<Rotor*> Quad::getRotors()
-    {
-        return _rotors;
-    }
-
     void Quad::switchDirRotors()
     {
-        for (auto rot : _rotors) //for (auto rot : _rotors) int i = 0; i < 4; i++
+        std::vector<Rotor*> rotors;
+        for (auto mot : _motors)
+        {
+            rotors.push_back(mot->getRotor());
+        }
+
+        for (auto rot : rotors) //for (auto rot : _rotors) int i = 0; i < 4; i++
         {
             //int direction = rot->getDir() * (-1); //_rotors[i]
             rot->setDir((rot->getDir() * (-1))); //direction
@@ -224,22 +206,30 @@
     void Quad::computeStep(double dt)
     {
         _dS = (dt * _velocity + 0.5 * dt * dt * _g);
+         _velocity = dt*_g;
 
-        if (this->getPosition()[2] <= _radius) //ad hoc collision with terrain
+        /*
+        if (this->getPosition()[2] <= _frame->getRadius()) //ad hoc collision with terrain
         {
             _dS[2] = 0;
             _velocity[2] = 0;
         }
 
+        //for skipping threshold
+        if (_velocity[2] < 0.01 || _velocity[2] > -0.01)
+        {
+            _velocity[2] = 0;
+        }
 
-        _velocity = (dt*_velocity + dt*_g);
+         else _velocity = (dt*_velocity + dt*_g);
+         */
 
         qDebug() << _velocity[0] << "  " << _velocity[1] << "  " << _velocity[2];
     }
 
     void Quad::computeFlyStep(double dt)
     {
-        //------------------------------------
+        /*//------------------------------------
         float thrustSum = 0;
         GMlib::Vector<float,4> w;
         GMlib::Vector<float,4> w_pow;
@@ -260,9 +250,21 @@
        auto gravLVec = globalMatrix *_g;
        auto localF = GMlib::Vector<float,3>(0,0,thrustSum);
 
-       _dS = gravLVec + (1/_mass) * localF;
+       _dS = gravLVec + (1.0/this->getMass()) * localF;
 
        _rotMatr += _dotRotMatr*dt;
+
+       _angVelMatX[0][0] = 0;
+       _angVelMatX[0][1] = -1*_angVel[2];
+       _angVelMatX[0][2] = _angVel[1];
+
+       _angVelMatX[1][0] = _angVel[2];
+       _angVelMatX[1][1] = 0;
+       _angVelMatX[1][2] = -1*_angVel[0];
+
+       _angVelMatX[2][0] = -1*_angVel[1];
+       _angVelMatX[2][1] = _angVel[0];
+       _angVelMatX[2][2] = 0;
 
        _dotRotMatr = _rotMatr * _angVelMatX;
 
@@ -270,12 +272,10 @@
 
        _dotAngVel = _invInMatr * (_torq - (_angVel ^ (_inMatr*_angVel)));
 
-       float d = _stSize/2;
-
-       _torq[0] = d * _Ct * (pow(_rotors[1]->getVelocityRot(),2)-(_rotors[3]->getVelocityRot(),2));
-       _torq[1] = d * _Ct * (pow(_rotors[0]->getVelocityRot(),2)-pow(_rotors[2]->getVelocityRot(),2));
+       _torq[0] = _d * _Ct * (pow(_rotors[1]->getVelocityRot(),2)-(_rotors[3]->getVelocityRot(),2));
+       _torq[1] = _d * _Ct * (pow(_rotors[0]->getVelocityRot(),2)-pow(_rotors[2]->getVelocityRot(),2));
        _torq[2] = _Cq * (-1 * pow(_rotors[0]->getVelocityRot(),2) + pow(_rotors[1]->getVelocityRot(),2) -
-               pow(_rotors[2]->getVelocityRot(),2) + pow(_rotors[3]->getVelocityRot(),2));
+               pow(_rotors[2]->getVelocityRot(),2) + pow(_rotors[3]->getVelocityRot(),2));j*/
     }
 
 
@@ -285,6 +285,7 @@
     this->translate(_dS);
 
     //-------------------------------2nd method
+//    //roll pitch yaw
 //    computeFlyStep(dt);
 
 //    _pos = this->getPosition();
@@ -293,13 +294,10 @@
 
 //    this->set(_pos,_dir,_up);
 
-//    if ((this->getPos() + _dS)[2] > 0 || _dS[2] > 0) //check for stationary position
+//    if ((this->getPos() + _dS*dt)[2] > 0 || _dS[2] > 0) //check for stationary position
 //    {
-//        this->translate(_dS); //translate(V*dt); //for translation
-
+//        this->translate(_dS*dt); //translate(V*dt); //for translation
 //    }
-
-//    qDebug() << _dS[0] << " " << _dS[1] << " " << _dS[2];
 
     //----------------------------------------
   }

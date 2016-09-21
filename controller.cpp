@@ -18,12 +18,9 @@
         this->setVisible(false); //hiding controller sphere
     }
 
-
-
   Controller::~Controller() {}
 
+  void Controller::localSimulate (double dt)
+  {
 
-    void Controller::localSimulate (double dt)
-    {
-
-    }
+  }

@@ -16,9 +16,6 @@ public:
 
 //methods for quad properties
 
-    void setVelocity(const GMlib::Vector<float,3> velocity);
-    GMlib::Vector<float,3> getVelocity();
-
     void setVelocityRot(float velocity);
     float getVelocityRot();
 
@@ -29,9 +26,9 @@ protected:
   void localSimulate(double dt);
 
 private:
-  GMlib::Vector<float,3> _velocity;
-  float _velocityRot;
-  int _direction;
+
+  float _velocityRot; //angular velocity value
+  int _direction;// -1 or 1: counter-clockwise and clockwise
 
 }; // END class
 

@@ -3,6 +3,7 @@
 #include "testtorus.h"
 #include "quad.h"
 #include "terrain.h"
+#include "textureloader.h"
 
 //// hidmanager
 //#include "hidmanager/defaulthidmanager.h"
@@ -93,8 +94,9 @@ void Scenario::initializeScenario() {
   auto floor = new Terrain(GMlib::Point<float,3>(-3,-2,0), GMlib::Vector<float,3>(0,10,0), GMlib::Vector<float,3>(6,0,0));
   scene()->insert(floor);
 
+
   //quadcopter
-  _qd = std::make_shared<Quad>(0.1,1.25,GMlib::Vector<float,3>(0,0,1.0)); //rad, mass, vel
+  _qd = std::make_shared<Quad>(1.25, GMlib::Vector<float,3>(0,0,0.0)); //mass, vel
   _qd->translateGlobal(GMlib::Vector<float,3>(0,0,1));
   scene()->insert(_qd.get());
 
@@ -113,6 +115,17 @@ void Scenario::cleanupScenario() {
 
 void Scenario::moveUp() //uplift actually throttle
 {
+    std::vector<Motor*> motors = _qd->getMotors();
+    for (auto mot : motors)
+    {
+        mot->setVelocity(GMlib::Vector<float,3> (0,0,1));
+    }
+
+
+    /*
+
+
+
     //_qd->translate(GMlib::Vector<float,3>(0,0,1)); //placeholder for checking
 
     GMlib::Vector<float,3> newVelVect = _qd->getVelocity();
@@ -144,6 +157,8 @@ void Scenario::moveUp() //uplift actually throttle
 //        moveVec[i] += 1.0; //value?
 //    }
 //    _qd->setMotorThrust(moveVec);
+
+*/
 
 }
 

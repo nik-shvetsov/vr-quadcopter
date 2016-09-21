@@ -13,10 +13,13 @@ public:
   Frame(double radius);
   ~Frame();
 
+  float getStSize();
+
 protected:
   void localSimulate(double dt);
 
 private:
+  float _stSize;
 
 }; // END class
 
