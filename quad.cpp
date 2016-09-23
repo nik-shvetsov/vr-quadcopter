@@ -5,35 +5,33 @@
 
   Quad::Quad(Scenario* scenario)
   {
-      //this->setSurroundingSphere(GMlib::Sphere<float,3>(100.0f));
+      this->setSurroundingSphere(GMlib::Sphere<float,3>(100.0f));
       _mass = 1.25;
       _sc = scenario;
 
       //collision sphere (for walls)
 
-      auto colSphere = new GMlib::PSphere<float>(0.3);
-      this->_colSphere = colSphere;
+      _colSphere = std::make_shared<GMlib::PSphere<float>>(0.3);
       _colSphere->toggleDefaultVisualizer();
       _colSphere->replot(200,200,1,1);
       _colSphere->setMaterial(GMlib::GMmaterial::PolishedRed);
       _colSphere->setVisible(false);
-      this->insert(_colSphere);
+      this->insert(_colSphere.get());
 
-      auto frame = new Frame(0.1);
-      this->_frame = frame;
-      this->insert(_frame);
+      _frame = std::make_shared<Frame>(0.1);
+      this->insert(_frame.get());
 
-      _d = (frame->getStSize()) / 2.0;
+      _d = (_frame->getStSize()) / 2.0;
 
       //motors
       float motorSize = 0.05; //0.5
-      auto motor1 = new Motor(motorSize); //10
+      auto motor1 = std::make_shared<Motor>(motorSize); //10
       _motors.push_back(motor1);
-      auto motor2 = new Motor(motorSize);
+      auto motor2 = std::make_shared<Motor>(motorSize);
       _motors.push_back(motor2);
-      auto motor3 = new Motor(motorSize);
+      auto motor3 = std::make_shared<Motor>(motorSize);
       _motors.push_back(motor3);
-      auto motor4 = new Motor(motorSize);
+      auto motor4 = std::make_shared<Motor>(motorSize);
       _motors.push_back(motor4);
 
       std::vector<GMlib::Vector<float,3>> translateVecSt;
@@ -42,13 +40,13 @@
       translateVecSt.push_back(GMlib::Vector<float,3>(_d,0,0));
       translateVecSt.push_back(GMlib::Vector<float,3>(0,_d,0));
 
-      for (int i = 0; i < (int)_motors.size(); i++)
+      for (int i = 0; i < 4; i++)
       {
           _motors[i]->translate(translateVecSt[i]);
-          this->insert(_motors[i]);
+          this->insert(_motors[i].get());
       }
 
-      std::vector<Rotor*> rotors;
+      std::vector<std::shared_ptr<Rotor>> rotors;
 
       //initializing rotor parameters
 
@@ -131,8 +129,6 @@
       _angVelMatX[2][1] = 0;
       _angVelMatX[2][2] = 0;
 
-      _position = this->getPos();
-
   }
 
   Quad::~Quad() {}
@@ -149,7 +145,7 @@
       return force;
   }
 
-  std::vector<Motor*> Quad::getMotors()
+  std::vector<std::shared_ptr<Motor>> Quad::getMotors()
   {
       return _motors;
   }
@@ -166,29 +162,7 @@
 
   void Quad::calculateAngVelXMatrix(double dt)
   {
-//      _rotMatr += _dotRotMatr * dt;
-
-//      _angVelMatX[0][0] = 0;
-//      _angVelMatX[0][1] = -_angVel[2];
-//      _angVelMatX[0][2] = _angVel[1];
-
-//      _angVelMatX[1][0] = _angVel[2];
-//      _angVelMatX[1][1] = 0;
-//      _angVelMatX[1][2] = -_angVel[0];
-
-//      _angVelMatX[2][0] = -_angVel[1];
-//      _angVelMatX[2][1] = _angVel[0];
-//      _angVelMatX[2][2] = 0;
-
-//      _dotRotMatr = _rotMatr * _angVelMatX;
-
-//      _angVel  += _dotAngVel * dt;
-
-//      _dotAngVel = _invInMatr * (calculateTorque() - (_angVel ^ (_inMatr * _angVel)));
-
-      _torq = calculateTorque(dt);
-      _dotAngVel = _invInMatr * (_torq - (_angVel ^ (_inMatr * _angVel)));
-      _angVel += _dotAngVel * dt;
+      _rotMatr += _dotRotMatr * dt;
 
       _angVelMatX[0][0] = 0;
       _angVelMatX[0][1] = -_angVel[2];
@@ -203,7 +177,29 @@
       _angVelMatX[2][2] = 0;
 
       _dotRotMatr = _rotMatr * _angVelMatX;
-      _rotMatr += _dotRotMatr * dt;
+
+      _angVel  += _dotAngVel * dt;
+
+      _dotAngVel = _invInMatr * (calculateTorque(dt) - (_angVel ^ (_inMatr * _angVel)));
+
+//      _torq = calculateTorque(dt);
+//      _dotAngVel = _invInMatr * (_torq - (_angVel ^ (_inMatr * _angVel)));
+//      _angVel += _dotAngVel * dt;
+
+//      _angVelMatX[0][0] = 0;
+//      _angVelMatX[0][1] = -_angVel[2];
+//      _angVelMatX[0][2] = _angVel[1];
+
+//      _angVelMatX[1][0] = _angVel[2];
+//      _angVelMatX[1][1] = 0;
+//      _angVelMatX[1][2] = -_angVel[0];
+
+//      _angVelMatX[2][0] = -_angVel[1];
+//      _angVelMatX[2][1] = _angVel[0];
+//      _angVelMatX[2][2] = 0;
+
+//      _dotRotMatr = _rotMatr * _angVelMatX;
+//      _rotMatr += _dotRotMatr * dt;
 
   }
 
@@ -220,7 +216,7 @@
 
     void Quad::switchDirRotors()
     {
-        std::vector<Rotor*> rotors;
+        std::vector<std::shared_ptr<Rotor>> rotors;
         for (auto mot : _motors)
         {
             rotors.push_back(mot->getRotor());
@@ -250,10 +246,12 @@
       this->set(this->getPos(),_dir,_up);
 
       //if ((this->getPos() + step*dt)[2] > 0) //check for stationary position
+      if ((this->getPosition() + step * dt)[2] > 0.099)
+      {
+        translate(step * dt);
 
-      translate(step * dt);
-
-      qDebug() << this->getPosition()[0] << " " << this->getPosition()[1] << " " << this->getPosition()[2];
+      //qDebug() << this->getPosition()[0] << " " << this->getPosition()[1] << " " << this->getPosition()[2];
+      }
       //qDebug() << step[0] << " " << step[1] << " " << step[2];
 
 

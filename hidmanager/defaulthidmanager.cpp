@@ -424,44 +424,91 @@ void DefaultHidManager::heToggleObjectDisplayMode() {
   }
 }
 
-//control methods
+//CONTROL METHODS----------------------------------------------------------------------------------
 
 void DefaultHidManager::heMoveUp() {
 
-    qDebug()<<"go up";
     emit signMoveUp();
 }
 
 void DefaultHidManager::heMoveDown() {
 
-    qDebug()<<"go down";
     emit signMoveDown();
 }
 
-void DefaultHidManager::heMoveForward() {
+void DefaultHidManager::hePitchForward() {
 
-    qDebug()<<"go forward";
-    emit signMoveForward();
+    emit signPitchForward();
 }
 
-void DefaultHidManager::heMoveBackward() {
+void DefaultHidManager::hePitchBackward() {
 
-    qDebug()<<"go backward";
-    emit signMoveBackward();
+    emit signPitchBackward();
 }
 
-void DefaultHidManager::heMoveLeft() {
+void DefaultHidManager::heRollRight() {
 
-    qDebug()<<"go left";
-    emit signMoveLeft();
+    emit signRollRight();
 }
 
-void DefaultHidManager::heMoveRight() {
+void DefaultHidManager::heRollLeft() {
 
-    qDebug()<<"go right";
-    emit signMoveRight();
+    emit signRollLeft();
 }
-//----
+
+void DefaultHidManager::heYawRight() {
+
+    emit signRollRight();
+}
+
+void DefaultHidManager::heYawLeft() {
+
+    emit signYawLeft();
+}
+
+//RELEASE
+void DefaultHidManager::heMoveUpStop() {
+
+    emit signMoveUpReleased();
+}
+
+void DefaultHidManager::heMoveDownStop() {
+
+    emit signMoveDownReleased();
+}
+
+void DefaultHidManager::hePitchForwardStop() {
+
+    emit signPitchForwardReleased();
+}
+
+void DefaultHidManager::hePitchBackwardStop() {
+
+    emit signPitchBackwardReleased();
+}
+
+void DefaultHidManager::heRollRightStop() {
+
+    emit signRollRightReleased();
+}
+
+void DefaultHidManager::heRollLeftStop() {
+
+    emit signRollLeftReleased();
+}
+
+void DefaultHidManager::heYawRightStop() {
+
+    emit signRollRightReleased();
+}
+
+void DefaultHidManager::heYawLeftStop() {
+
+    emit signYawLeftReleased();
+}
+
+
+//------------------------------------------------------------------------------
 
 void DefaultHidManager::heToggleSimulation() {
 
@@ -691,54 +738,104 @@ void DefaultHidManager::setupDefaultHidBindings() {
                          "Stuff that happens on left mouse release",
                          this, SLOT(heLeftMouseReleaseStuff()) );
 
-  //Quad controls
-//  QString ha_id_quad_up =
-//      registerHidAction( "Object interation",
-//                         "Move quadcopter up",
-//                         "Move quadcopter up",
-//                         this, SLOT(heQuadGoUp()) );
+  //Quad controls----------------------------------------------------------------------------
 
     QString ha_id_move_up =
-        registerHidAction( "Object interation",
+        registerHidAction( "Quad control",
                            "Move quadcopter up",
                            "Move quadcopter",
-                           this, SLOT(heMoveUp()),
-                           OGL_TRIGGER);
+                           this, SLOT(heMoveUp()));
 
     QString ha_id_move_down =
-        registerHidAction( "Object interation",
+        registerHidAction( "Quad control",
                            "Move quadcopter down",
                            "Move quadcopter",
-                           this, SLOT(heMoveDown()),
-                           OGL_TRIGGER);
+                           this, SLOT(heMoveDown()));
 
-    QString ha_id_move_forward =
-        registerHidAction( "Object interation",
+    QString ha_id_pitch_forward =
+        registerHidAction( "Quad control",
                            "Move quadcopter forward",
                            "Move quadcopter",
-                           this, SLOT(heMoveForward()),
-                           OGL_TRIGGER);
+                           this, SLOT(hePitchForward()));
 
-    QString ha_id_move_backward =
-        registerHidAction( "Object interation",
+    QString ha_id_pitch_backward =
+        registerHidAction( "Quad control",
                            "Move quadcopter backward",
                            "Move quadcopter",
-                           this, SLOT(heMoveBackward()),
-                           OGL_TRIGGER);
+                           this, SLOT(hePitchBackward()));
 
-    QString ha_id_move_left =
-        registerHidAction( "Object interation",
-                           "Move quadcopter left",
-                           "Move quadcopter",
-                           this, SLOT(heMoveLeft()),
-                           OGL_TRIGGER);
-
-    QString ha_id_move_right =
-        registerHidAction( "Object interation",
+    QString ha_id_roll_right =
+        registerHidAction( "Quad control",
                            "Move quadcopter right",
                            "Move quadcopter",
-                           this, SLOT(heMoveRight()),
-                           OGL_TRIGGER);
+                           this, SLOT(heRollRight()));
+
+    QString ha_id_roll_left =
+        registerHidAction( "Quad control",
+                           "Move quadcopter left",
+                           "Move quadcopter",
+                           this, SLOT(heRollLeft()));
+
+    QString ha_id_yaw_right =
+        registerHidAction( "Quad control",
+                           "Rotate quadcopter right",
+                           "Move quadcopter",
+                           this, SLOT(heYawRight()));
+
+    QString ha_id_yaw_left =
+        registerHidAction( "Quad control",
+                           "Rotate quadcopter left",
+                           "Move quadcopter",
+                           this, SLOT(heYawLeft()));
+
+    //RELEASE
+    QString ha_id_move_up_stop =
+        registerHidAction( "Quad control",
+                           "Stop-Move quadcopter up",
+                           "Move quadcopter",
+                           this, SLOT(heMoveUpStop()));
+
+    QString ha_id_move_down_stop =
+        registerHidAction( "Quad control",
+                           "Stop-Move quadcopter down",
+                           "Move quadcopter",
+                           this, SLOT(heMoveDownStop()));
+
+    QString ha_id_pitch_forward_stop =
+        registerHidAction( "Quad control",
+                           "Stop-Move quadcopter forward",
+                           "Move quadcopter",
+                           this, SLOT(hePitchForwardStop()));
+
+    QString ha_id_pitch_backward_stop =
+        registerHidAction( "Quad control",
+                           "Stop-Move quadcopter backward",
+                           "Move quadcopter",
+                           this, SLOT(hePitchBackwardStop()));
+
+    QString ha_id_roll_right_stop =
+        registerHidAction( "Quad control",
+                           "Stop-Move quadcopter right",
+                           "Move quadcopter",
+                           this, SLOT(heRollRightStop()));
+
+    QString ha_id_roll_left_stop =
+        registerHidAction( "Quad control",
+                           "Stop-Move quadcopter left",
+                           "Move quadcopter",
+                           this, SLOT(heRollLeftStop()));
+
+    QString ha_id_yaw_right_stop =
+        registerHidAction( "Quad control",
+                           "Stop-Rotate quadcopter right",
+                           "Move quadcopter",
+                           this, SLOT(heYawRightStop()));
+
+    QString ha_id_yaw_left_stop =
+        registerHidAction( "Quad control",
+                           "Stop-Rotate quadcopter left",
+                           "Move quadcopter",
+                           this, SLOT(heYawLeftStop()));
 
 
   //// Set up initial mapping
@@ -753,10 +850,23 @@ void DefaultHidManager::setupDefaultHidBindings() {
   //control keys
   registerHidMapping( ha_id_move_up,                      new KeyPressInput( Qt::Key_5, Qt::KeypadModifier));
   registerHidMapping( ha_id_move_down,                    new KeyPressInput( Qt::Key_0, Qt::KeypadModifier));
-  registerHidMapping( ha_id_move_forward,                 new KeyPressInput( Qt::Key_8, Qt::KeypadModifier));
-  registerHidMapping( ha_id_move_backward,                new KeyPressInput( Qt::Key_2, Qt::KeypadModifier));
-  registerHidMapping( ha_id_move_left,                    new KeyPressInput( Qt::Key_4, Qt::KeypadModifier));
-  registerHidMapping( ha_id_move_right,                   new KeyPressInput( Qt::Key_6, Qt::KeypadModifier));
+  registerHidMapping( ha_id_pitch_forward,                new KeyPressInput( Qt::Key_8, Qt::KeypadModifier));
+  registerHidMapping( ha_id_pitch_backward,               new KeyPressInput( Qt::Key_2, Qt::KeypadModifier));
+  registerHidMapping( ha_id_roll_right,                   new KeyPressInput( Qt::Key_6, Qt::KeypadModifier));
+  registerHidMapping( ha_id_roll_left,                    new KeyPressInput( Qt::Key_4, Qt::KeypadModifier));
+  registerHidMapping( ha_id_yaw_right,                    new KeyPressInput( Qt::Key_9, Qt::KeypadModifier));
+  registerHidMapping( ha_id_yaw_left,                     new KeyPressInput( Qt::Key_7, Qt::KeypadModifier));
+
+
+  registerHidMapping( ha_id_move_up_stop,                 new KeyReleaseInput( Qt::Key_5, Qt::KeypadModifier));
+  registerHidMapping( ha_id_move_down_stop,               new KeyReleaseInput( Qt::Key_0, Qt::KeypadModifier));
+  registerHidMapping( ha_id_pitch_forward_stop,           new KeyReleaseInput( Qt::Key_8, Qt::KeypadModifier));
+  registerHidMapping( ha_id_pitch_backward_stop,          new KeyReleaseInput( Qt::Key_2, Qt::KeypadModifier));
+  registerHidMapping( ha_id_roll_right_stop,              new KeyReleaseInput( Qt::Key_6, Qt::KeypadModifier));
+  registerHidMapping( ha_id_roll_left_stop,               new KeyReleaseInput( Qt::Key_4, Qt::KeypadModifier));
+  registerHidMapping( ha_id_yaw_right_stop,               new KeyReleaseInput( Qt::Key_9, Qt::KeypadModifier));
+  registerHidMapping( ha_id_yaw_left_stop,                new KeyReleaseInput( Qt::Key_7, Qt::KeypadModifier));
+  //-------------------------------------------
 
 
   registerHidMapping( ha_id_objsel_select,                new MousePressInput( Qt::RightButton ) );

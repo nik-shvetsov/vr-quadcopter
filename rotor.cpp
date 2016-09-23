@@ -37,10 +37,9 @@
   void Rotor::localSimulate(double dt)
   { 
       double angle = _velocityRot * _direction * dt;
-      rotateGlobal(GMlib::Angle(angle), GMlib::Vector<float,3> (0,0,1));
+      rotateParent(GMlib::Angle(angle), GMlib::Vector<float,3> (0,0,1));
 
     //rotateParent(_dS.getLength(), this->getGlobalPos(), this->getSurfNormal()^_dS);
-
     //this->translateParent(_dS);
     //computeStep(dt);
   }

@@ -23,7 +23,7 @@ public:
 //methods for quad properties
 
     double getMass();
-    std::vector<Motor*> getMotors();
+    std::vector<std::shared_ptr<Motor>> getMotors();
 
     double computeForce(double dt);
 
@@ -45,9 +45,12 @@ private:
 
   Scenario* _sc;
 
-  std::vector<Motor*> _motors {}; //in every motor there is a rotor
-  Frame* _frame;
-  GMlib::PSphere<float>* _colSphere; //collision sphere
+  std::vector<std::shared_ptr<Motor>> _motors;
+  //std::vector<Motor*> _motors {}; //in every motor there is a rotor
+  std::shared_ptr<Frame> _frame;
+  //Frame* _frame;
+  std::shared_ptr<GMlib::PSphere<float>> _colSphere;
+  //GMlib::PSphere<float>* _colSphere; //collision sphere
 
   //values for movment
   const double _Ct = (86.0e-7); //thrust coef

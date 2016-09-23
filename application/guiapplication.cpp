@@ -125,17 +125,52 @@ GuiApplication::afterOnSceneGraphInitialized() {
     connect( &_hidmanager, &DefaultHidManager::signMoveDown,
              &_scenario, &Scenario::moveDown );
 
-    connect( &_hidmanager, &DefaultHidManager::signMoveForward,
-             &_scenario, &Scenario::moveForward );
+    connect( &_hidmanager, &DefaultHidManager::signPitchForward,
+             &_scenario, &Scenario::pitchForward );
 
-    connect( &_hidmanager, &DefaultHidManager::signMoveBackward,
-             &_scenario, &Scenario::moveBackward );
+    connect( &_hidmanager, &DefaultHidManager::signPitchBackward,
+             &_scenario, &Scenario::pitchBackward );
 
-    connect( &_hidmanager, &DefaultHidManager::signMoveLeft,
-             &_scenario, &Scenario::moveLeft );
+    connect( &_hidmanager, &DefaultHidManager::signRollRight,
+             &_scenario, &Scenario::rollRight );
 
-    connect( &_hidmanager, &DefaultHidManager::signMoveRight,
-             &_scenario, &Scenario::moveRight );
+    connect( &_hidmanager, &DefaultHidManager::signRollLeft,
+             &_scenario, &Scenario::rollLeft );
+
+    connect( &_hidmanager, &DefaultHidManager::signYawRight,
+             &_scenario, &Scenario::yawRight );
+
+    connect( &_hidmanager, &DefaultHidManager::signYawLeft,
+             &_scenario, &Scenario::yawLeft );
+
+    //
+
+    connect( &_hidmanager, &DefaultHidManager::signMoveUpReleased,
+             &_scenario, &Scenario::moveUpReleased );
+
+    connect( &_hidmanager, &DefaultHidManager::signMoveDownReleased,
+             &_scenario, &Scenario::moveDownReleased );
+
+    connect( &_hidmanager, &DefaultHidManager::signPitchForwardReleased,
+             &_scenario, &Scenario::pitchForwardReleased );
+
+    connect( &_hidmanager, &DefaultHidManager::signPitchBackwardReleased,
+             &_scenario, &Scenario::pitchBackwardReleased );
+
+    connect( &_hidmanager, &DefaultHidManager::signRollRightReleased,
+             &_scenario, &Scenario::rollRightReleased );
+
+    connect( &_hidmanager, &DefaultHidManager::signRollLeftReleased,
+             &_scenario, &Scenario::rollLeftReleased );
+
+    connect( &_hidmanager, &DefaultHidManager::signYawRightReleased,
+             &_scenario, &Scenario::yawRightReleased );
+
+    connect( &_hidmanager, &DefaultHidManager::signYawLeftReleased,
+             &_scenario, &Scenario::yawLeftReleased );
+
+
+
 
 
   // Update RCPair name model

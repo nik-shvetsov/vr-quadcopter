@@ -18,8 +18,8 @@
 
       float upZ = 0.04 * 0.1;
 
-      auto rotor = new Rotor(1);
-      _rotor = rotor;
+
+      _rotor = std::make_shared<Rotor>(1);
 
       _rotor->toggleDefaultVisualizer();
       _rotor->replot(200,200,1,1);
@@ -27,14 +27,14 @@
       _rotor->translateGlobal(GMlib::Vector<float,3>(0,0,radius+upZ));
       _rotor->rotate(GMlib::Angle(90), GMlib::Vector<float,3>(0,1,0));
 
-      this->insert(_rotor);
+      this->insert(_rotor.get());
   }
 
   Motor::~Motor() {}
 
 //methods for setting Motor properties
 
-    Rotor* Motor::getRotor()
+    std::shared_ptr<Rotor> Motor::getRotor()
     {
       return _rotor;
     }
@@ -44,53 +44,46 @@
         return (_thrust + _velPitch + _velRoll + _velYaw) / dt;
     }
 
-    float Motor::getThrust()
-    {
-        return _thrust;
-    }
-
-    void Motor::setThrust(float thrust)
-    {
-        _thrust = thrust;
-    }
-
     void Motor::updateThrust(float thrust)
     {
         _thrust += thrust;
         if (_thrust < 0.0) _thrust = 0.0;
     }
 
-    void Motor::speedPitch(float pitchVal) // 0 0.1 -0.1
+    void Motor::setPitch(float pitchVal) // 0 0.1 -0.1
     {
         _velPitch = pitchVal;
     }
-    void Motor::speedRoll(float rollVal) // 0 0.1 -0.1
+    void Motor::setRoll(float rollVal) // 0 0.1 -0.1
     {
         _velRoll = rollVal;
     }
-    void Motor::speedYaw(float yawVal) // 0 0.1 -0.1
+    void Motor::setYaw(float yawVal) // 0 0.1 -0.1
     {
         _velYaw = yawVal;
     }
 
-    float Motor::getTotalThrust()
+    float Motor::getThrust()
     {
-        float force = std::sqrt( (1.25 * 9.81) / (4 * 86.0e-7) );
-        _thrust = force*2*0.2;
-
         return _thrust;
     }
 
+    void Motor::setThrust(float thrust) //nnu
+    {
+        _thrust = thrust;
+    }
 
     void Motor::localSimulate(double dt)
     {
       _rotor->setVelocityRot(this->getThrust()); //velocityRot.rotor = thrust.motor
-
-      //this->computeStep(dt);
-      //this->translate(_dS);
     }
 
-//----------------------------------------old methods
 
 
-
+    //-------------------------------
+    float Motor::getTotalThrust()
+    {
+        //float force = std::sqrt( (1.25 * 9.81) / (4 * 86.0e-7) );
+        //_thrust = force*2*0.2;
+        return _thrust;
+    }

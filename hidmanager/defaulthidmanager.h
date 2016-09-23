@@ -34,10 +34,22 @@ signals:
 
   void signMoveUp();
   void signMoveDown();
-  void signMoveForward();
-  void signMoveBackward();
-  void signMoveLeft();
-  void signMoveRight();
+  void signPitchForward();
+  void signPitchBackward();
+  void signRollRight();
+  void signRollLeft();
+  void signYawRight();
+  void signYawLeft();
+
+  void signMoveUpReleased();
+  void signMoveDownReleased();
+  void signPitchForwardReleased();
+  void signPitchBackwardReleased();
+  void signRollRightReleased();
+  void signRollLeftReleased();
+  void signYawRightReleased();
+  void signYawLeftReleased();
+
 
 private slots:
   virtual void                      heDeSelectAllObjects();
@@ -61,8 +73,6 @@ private slots:
   virtual void                      heToggleSimulation();
   virtual void                      heToggleSelectAllObjects();
 
-  //virtual void                      heQuadGoUp();
-
 //  virtual void                      heUnlockCamera();
   virtual void                      heZoom( const HidInputEvent::HidInputParams& params );
 
@@ -72,10 +82,22 @@ private slots:
   //control slots
   virtual void                      heMoveUp();
   virtual void                      heMoveDown();
-  virtual void                      heMoveForward();
-  virtual void                      heMoveBackward();
-  virtual void                      heMoveLeft();
-  virtual void                      heMoveRight();
+  virtual void                      hePitchForward();
+  virtual void                      hePitchBackward();
+  virtual void                      heRollRight();
+  virtual void                      heRollLeft();
+  virtual void                      heYawRight();
+  virtual void                      heYawLeft();
+
+  virtual void                      heMoveUpStop();
+  virtual void                      heMoveDownStop();
+  virtual void                      hePitchForwardStop();
+  virtual void                      hePitchBackwardStop();
+  virtual void                      heRollRightStop();
+  virtual void                      heRollLeftStop();
+  virtual void                      heYawRightStop();
+  virtual void                      heYawLeftStop();
+
 
 private:
   GMlib::Camera*                    findCamera( const QString& view_name ) const;

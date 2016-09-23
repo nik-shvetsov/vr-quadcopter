@@ -15,7 +15,7 @@ public:
   float getStSize();
 
 private:
-  float _stSize;
+  float _stSize = 0.5;
 
 }; // END class
 

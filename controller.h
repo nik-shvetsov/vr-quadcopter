@@ -19,11 +19,27 @@ class Controller : public GMlib::SceneObject {
     GM_SCENEOBJECT(Controller)
 
 public:
-    Controller(Scenario* scenario);
+    Controller(Scenario* scenario, std::shared_ptr<GMlib::Camera> cam);
     ~Controller();
 
     void moveUp();
     void moveDown();
+    void pitchForward();
+    void pitchBackward();
+    void rollRight();
+    void rollLeft();
+    void yawRight();
+    void yawLeft();
+
+    void moveUpReleased();
+    void moveDownReleased();
+    void pitchForwardReleased();
+    void pitchBackwardReleased();
+    void rollRightReleased();
+    void rollLeftReleased();
+    void yawRightReleased();
+    void yawLeftReleased();
+
 
     //void insertQuad(Ball* ball);
     //void insertWall(PWall* wall);
@@ -41,11 +57,11 @@ private:
     std::shared_ptr<Quad> _qd;
     std::shared_ptr<Terrain> _terrain;
     std::shared_ptr<Skybox> _skybox;
-
     std::shared_ptr<GMlib::Camera> _followCam;
 
     std::vector<GMlib::Point<float, 3>> _traj;
     Scenario* _scenario;
+
 
     //GMlib::Array<Collision> _arrCols;
     //GMlib::Array<Ball*> _arrBalls;

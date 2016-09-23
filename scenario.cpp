@@ -14,6 +14,7 @@
 //// hidmanager
 //#include "hidmanager/defaulthidmanager.h"
 
+
 // gmlib
 #include <gmOpenglModule>
 #include <gmSceneModule>
@@ -47,7 +48,7 @@ void Scenario::initializeScenario() {
   proj_rcpair.camera->setCuttingPlanes( 1.0f, 8000.0f );
   proj_rcpair.camera->rotateGlobal( GMlib::Angle(-45), GMlib::Vector<float,3>( 1.0f, 0.0f, 0.0f ) );
   proj_rcpair.camera->translateGlobal( GMlib::Vector<float,3>( 0.0f, -7.0f, 7.0f ) );
-  proj_rcpair.camera->enableCulling(false);
+  //proj_rcpair.camera->enableCulling(false);
   //proj_rcpair.camera->translateGlobal( GMlib::Vector<float,3>( 0.0f, -50.0f, 50.0f ) );
   //proj_rcpair.camera->translateGlobal( GMlib::Vector<float,3>( 0.0f, -20.0f, 20.0f ) ); //orig
   scene()->insertCamera( proj_rcpair.camera.get() );
@@ -76,14 +77,14 @@ void Scenario::initializeScenario() {
   top_rcpair.renderer->reshape( GMlib::Vector<int,2>(init_viewport_size, init_viewport_size) );
 
   //Follow cam
-//  auto quad_rcpair = createRCPair("Follow");
-//  proj_rcpair.camera->set(init_cam_pos,init_cam_dir,init_cam_up);
-//  proj_rcpair.camera->setCuttingPlanes( 1.0f, 8000.0f );
-//  proj_rcpair.camera->rotateGlobal( GMlib::Angle(-45), GMlib::Vector<float,3>( 1.0f, 0.0f, 0.0f ) );
-//  proj_rcpair.camera->translateGlobal( GMlib::Vector<float,3>( 0.0f, -7.0f, 7.0f ) );
-//  proj_rcpair.camera->enableCulling(false);
-//  scene()->insertCamera( quad_rcpair.camera.get() );
-//  quad_rcpair.renderer->reshape( GMlib::Vector<int,2>(init_viewport_size, init_viewport_size) );
+  auto quad_follow_rcpair = createRCPair("Follow");
+  quad_follow_rcpair.camera->set(init_cam_pos,init_cam_dir,init_cam_up);
+  quad_follow_rcpair.camera->setCuttingPlanes( 1.0f, 8000.0f );
+  quad_follow_rcpair.camera->rotateGlobal( GMlib::Angle(-45), GMlib::Vector<float,3>( 1.0f, 0.0f, 0.0f ) );
+  quad_follow_rcpair.camera->translateGlobal( GMlib::Vector<float,3>( 0.0f, -3.0f, 3.0f ) );
+  quad_follow_rcpair.camera->enableCulling(false);
+  scene()->insertCamera( quad_follow_rcpair.camera.get() );
+  quad_follow_rcpair.renderer->reshape( GMlib::Vector<int,2>(init_viewport_size, init_viewport_size) );
 
 
   // Surface visualizers
@@ -107,8 +108,9 @@ void Scenario::initializeScenario() {
 //  scene()->insert(ball);
 
   //controller
-  _controller = new Controller(this);
-  scene()->insert(_controller);
+  //_controller = new Controller(this, quad_follow_rcpair.camera);
+  _controller = std::make_shared<Controller>(this, quad_follow_rcpair.camera);
+  scene()->insert(_controller.get());
 
   //tests
 
@@ -120,102 +122,78 @@ void Scenario::initializeScenario() {
 //  scene()->insert(trajectory);
 }
 
-void Scenario::cleanupScenario() {
+void Scenario::cleanupScenario()
+{
 
 }
 
-
-void Scenario::moveUp() //uplift
+//ON PRESS CONTROLS
+void Scenario::moveUp()
 {
     _controller->moveUp();
 }
 
-void Scenario::moveDown() //down
+void Scenario::moveDown()
 {
     _controller->moveDown();
 }
 
-//void Scenario::moveUpReleased()
-//{
-//    moveUpReleased();
-//}
-//void Scenario::moveDownReleased()
-//{
-//    moveDownReleased();
-//}
-
-/*
-void Scenario::moveUp() //for method 2
+void Scenario::pitchForward()
 {
-    std::vector<Rotor*> rotors = _qd->getRotors();
-    rotors[0]->setVelocityRot(rotors[0]->getVelocityRot()+10);
-    rotors[1]->setVelocityRot(rotors[1]->getVelocityRot()+10);
-    rotors[2]->setVelocityRot(rotors[2]->getVelocityRot()+10);
-    rotors[3]->setVelocityRot(rotors[3]->getVelocityRot()+10);
-}
-*/
-
-void Scenario::moveForward() //pitch
-{
-    //_qd->switchDirRotors();
-
-    //GMlib::Vector<float,4> moveVec = _qd->getMotorThrust();
-    //moveVec[2] += 2.0; //diametrically opposite motor to the disired direction
-    //moveVec[1] -= 0.5;
-
-    //_qd->setMotorThrust(moveVec);
+    _controller->pitchForward();
 }
 
-void Scenario::moveBackward() //pitch
+void Scenario::pitchBackward()
 {
-    //GMlib::Vector<float,4> moveVec = _qd->getMotorThrust();
-    //moveVec[1] += 2.0; //diametrically opposite motor to the disired direction
-    //moveVec[2] -= 0.5;
-
-    //_qd->setMotorThrust(moveVec);
+    _controller->pitchBackward();
+}
+void Scenario::rollRight()
+{
+    _controller->rollRight();
+}
+void Scenario::rollLeft()
+{
+    _controller->rollLeft();
+}
+void Scenario::yawRight()
+{
+    _controller->yawRight();
+}
+void Scenario::yawLeft()
+{
+    _controller->yawLeft();
 }
 
-void Scenario::moveRight() //roll
+//ON RELEASE CONTROLS
+void Scenario::moveUpReleased()
 {
-    //GMlib::Vector<float,4> moveVec = _qd->getMotorThrust();
-    //moveVec[0] += 2.0; //diametrically opposite motor to the disired direction
-    //moveVec[2] -= 0.5;
-
-    //_qd->setMotorThrust(moveVec);
+    _controller->moveUpReleased();
 }
-void Scenario::moveLeft() //roll
+void Scenario::moveDownReleased()
 {
-    //GMlib::Vector<float,4> moveVec = _qd->getMotorThrust();
-    //moveVec[2] += 2.0; //diametrically opposite motor to the disired direction
-    //moveVec[0] -= 0.5;
-
-    //_qd->setMotorThrust(moveVec);
+    _controller->moveDownReleased();
 }
-
-//need 2 for yaw
-void Scenario::yawLeft() //yaw
+void Scenario::pitchForwardReleased()
 {
-    //GMlib::Vector<float,4> moveVec = _qd->getMotorThrust();
-
-    //moveVec[2] *= 1.1;
-    //moveVec[0] *= 1.1;
-
-    //moveVec[1] *= 0.1;
-    //moveVec[3] *= 0.1;
-
-    //_qd->setMotorThrust(moveVec);
-}//
-
-void Scenario::yawRight() //yaw
-{
-    //GMlib::Vector<float,4> moveVec = _qd->getMotorThrust();
-
-    //moveVec[1] *= 1.1;
-    //moveVec[3] *= 1.1;
-
-    //moveVec[0] *= 0.1;
-    //moveVec[2] *= 0.1;
-
-    //_qd->setMotorThrust(moveVec);
+    _controller->pitchForwardReleased();
 }
-
+void Scenario::pitchBackwardReleased()
+{
+    _controller->pitchBackwardReleased();
+}
+void Scenario::rollRightReleased()
+{
+    _controller->rollRightReleased();
+}
+void Scenario::rollLeftReleased()
+{
+    _controller->rollLeftReleased();
+}
+void Scenario::yawRightReleased()
+{
+    _controller->yawRightReleased();
+}
+void Scenario::yawLeftReleased()
+{
+    _controller->yawLeftReleased();
+}

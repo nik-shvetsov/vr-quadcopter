@@ -2,6 +2,7 @@
 #define SCENARIO_H
 
 #include "application/gmlibwrapper.h"
+#include <memory>
 
 // qt
 #include <QObject>
@@ -19,19 +20,29 @@ public:
 
   void moveUp();
   void moveDown();
-  void moveRight();
-  void moveLeft();
-  void moveForward();
-  void moveBackward();
+  void rollRight();
+  void rollLeft();
+  void pitchForward();
+  void pitchBackward();
   void yawRight();
   void yawLeft();
+
+  void moveUpReleased();
+  void moveDownReleased();
+  void rollRightReleased();
+  void rollLeftReleased();
+  void pitchForwardReleased();
+  void pitchBackwardReleased();
+  void yawRightReleased();
+  void yawLeftReleased();
 
   //void  keyPressed(const QString& name, QKeyEvent* event);
 
 private:
   //Quad* _qd {nullptr};
+  //Controller* _controller;
 
-  Controller* _controller;
+  std::shared_ptr<Controller> _controller;
 
 };
 
