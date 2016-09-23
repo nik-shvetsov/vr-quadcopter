@@ -3,17 +3,12 @@
 
 #include <QDebug>
 
-  Quad::Quad()
+  Quad::Quad(Scenario* scenario)
   {
-      //this->_mass = mass;
-      //this->_velocity = velocity;
       //this->setSurroundingSphere(GMlib::Sphere<float,3>(100.0f));
-
-      //this->toggleDefaultVisualizer();
-      //this->replot(200,200,1,1);
-      //this->setMaterial(GMlib::GMmaterial::Chrome);
-
       _mass = 1.25;
+      _sc = scenario;
+
       //collision sphere (for walls)
 
       auto colSphere = new GMlib::PSphere<float>(0.3);
@@ -49,9 +44,6 @@
 
       for (int i = 0; i < (int)_motors.size(); i++)
       {
-          _motors[i]->toggleDefaultVisualizer();
-          _motors[i]->replot(200,200,1,1);
-          _motors[i]->setMaterial(GMlib::GMmaterial::Gold);
           _motors[i]->translate(translateVecSt[i]);
           this->insert(_motors[i]);
       }
@@ -128,18 +120,17 @@
       //
 
       _angVelMatX[0][0] = 0;
-      _angVelMatX[0][1] = 0;//-1.0 * _angVel[2];
-      _angVelMatX[0][2] = 0;//_angVel[1];
+      _angVelMatX[0][1] = 0;
+      _angVelMatX[0][2] = 0;
 
-      _angVelMatX[1][0] = 0;//_angVel[2];
+      _angVelMatX[1][0] = 0;
       _angVelMatX[1][1] = 0;
-      _angVelMatX[1][2] = 0;//_angVel[0];
+      _angVelMatX[1][2] = 0;
 
-      _angVelMatX[2][0] = 0;//-1.0 * _angVel[1];
-      _angVelMatX[2][1] = 0;//_angVel[0];
+      _angVelMatX[2][0] = 0;
+      _angVelMatX[2][1] = 0;
       _angVelMatX[2][2] = 0;
 
-      _dS = GMlib::Vector<float, 3>(0, 0, 0);
       _position = this->getPos();
 
   }
@@ -175,7 +166,29 @@
 
   void Quad::calculateAngVelXMatrix(double dt)
   {
-      _rotMatr += _dotRotMatr * dt;
+//      _rotMatr += _dotRotMatr * dt;
+
+//      _angVelMatX[0][0] = 0;
+//      _angVelMatX[0][1] = -_angVel[2];
+//      _angVelMatX[0][2] = _angVel[1];
+
+//      _angVelMatX[1][0] = _angVel[2];
+//      _angVelMatX[1][1] = 0;
+//      _angVelMatX[1][2] = -_angVel[0];
+
+//      _angVelMatX[2][0] = -_angVel[1];
+//      _angVelMatX[2][1] = _angVel[0];
+//      _angVelMatX[2][2] = 0;
+
+//      _dotRotMatr = _rotMatr * _angVelMatX;
+
+//      _angVel  += _dotAngVel * dt;
+
+//      _dotAngVel = _invInMatr * (calculateTorque() - (_angVel ^ (_inMatr * _angVel)));
+
+      _torq = calculateTorque(dt);
+      _dotAngVel = _invInMatr * (_torq - (_angVel ^ (_inMatr * _angVel)));
+      _angVel += _dotAngVel * dt;
 
       _angVelMatX[0][0] = 0;
       _angVelMatX[0][1] = -_angVel[2];
@@ -190,64 +203,19 @@
       _angVelMatX[2][2] = 0;
 
       _dotRotMatr = _rotMatr * _angVelMatX;
+      _rotMatr += _dotRotMatr * dt;
 
-      _angVel  += _dotAngVel * dt;
-
-      GMlib::Vector<double,3> ima = _inMatr * _angVel;
-      GMlib::Vector<double,3> angima = _angVel ^ ima;
-
-      _dotAngVel = _invInMatr * (calculateTorque(dt) - angima);
   }
-
-
-  //-----------------------------------------------!!!old
-
-    void Quad::setVelocity(GMlib::Vector<float,3> velocity)
-    {
-        _velocity = velocity;
-    }
-
-    GMlib::Vector<float,3> Quad::getVelocity()
-    {
-        return _velocity;
-    }
 
     double Quad::getMass()
     {
         return _mass;
     }
 
-
-
-    GMlib::Vector<float,3> Quad::getDs()
-    {
-        return _dS;
-    }
-
     GMlib::Point<float,3> Quad::getPosition()
     {
         _position = this->getPos();
         return _position;
-    }
-
-    void Quad::setMotorThrust(GMlib::Vector<float,4> thrustvec) //&
-    {
-        for (int i = 0; i < 4; i++)
-        {
-            _motors[i]->setThrust(thrustvec[i]);
-        }
-    }
-
-    GMlib::Vector<float,4> Quad::getMotorThrust()
-    {
-        GMlib::Vector<float,4> thrustvec;
-
-        for (int i = 0; i < 4; i++)
-        {
-            thrustvec[i] = _motors[i]->getThrust();
-        }
-
-        return thrustvec;
     }
 
     void Quad::switchDirRotors()
@@ -265,82 +233,29 @@
         }
     }
 
-    GMlib::Vector<float,3> Quad::computeFrameDs()
-    {
-        GMlib::Vector<float,3> vec;
-
-        vec = (_motors[0]->getDs() + _motors[1]->getDs() + _motors[2]->getDs() + _motors[3]->getDs())/4;
-
-        return vec;
-    }
-
-    void Quad::computeStep(double dt)
-    {
-        _dS = (dt * _velocity + 0.5 * dt * dt * _g);
-         _velocity = dt*_g;
-
-        /*
-        if (this->getPosition()[2] <= _frame->getRadius()) //ad hoc collision with terrain
-        {
-            _dS[2] = 0;
-            _velocity[2] = 0;
-        }
-
-        //for skipping threshold
-        if (_velocity[2] < 0.01 || _velocity[2] > -0.01)
-        {
-            _velocity[2] = 0;
-        }
-
-         else _velocity = (dt*_velocity + dt*_g);
-         */
-
-        //qDebug() << _velocity[0] << "  " << _velocity[1] << "  " << _velocity[2];
-    }
-
-
   void Quad::localSimulate(double dt)
   {
       auto globalMatrix = getMatrixGlobal();
       globalMatrix.invert();
 
       double force =  computeForce(dt);
-      GMlib::Vector<float,3> step = globalMatrix * _g +  (1.0 / _mass) * GMlib::Vector<float,3>(0,0,force);
+      GMlib::Vector<float,3> step = globalMatrix * _g +  (1.0f / _mass) * GMlib::Vector<float,3>(0,0,force);
 
       calculateAngVelXMatrix(dt);
 
-      _position = this->getPos();
+      //_position = this->getPos();
       _dir = GMlib::Vector<float, 3>(_rotMatr[0][0], _rotMatr[0][1], _rotMatr[0][2]);
       _up = GMlib::Vector<float, 3>(_rotMatr[2][0], _rotMatr[2][1], _rotMatr[2][2]);
 
-      this->set(_position,_dir,_up);
+      this->set(this->getPos(),_dir,_up);
 
-      if ((this->getPosition() + step*dt)[2] > 0) //check for stationary position
-      {
-          translate(step * dt);
-      }
+      //if ((this->getPos() + step*dt)[2] > 0) //check for stationary position
 
-    //-----------------------------------old
-    //-----------------------------------1st method
-    //computeStep(dt);
-    //this->translate(_dS);
+      translate(step * dt);
 
-    //_frame->translate(computeFrameDs());
+      qDebug() << this->getPosition()[0] << " " << this->getPosition()[1] << " " << this->getPosition()[2];
+      //qDebug() << step[0] << " " << step[1] << " " << step[2];
 
-    //-------------------------------2nd method
-//    //roll pitch yaw
-//    computeFlyStep(dt);
 
-//    _pos = this->getPosition();
-//    _dir = GMlib::Vector<float, 3>(_rotMatr[0][0], _rotMatr[0][1], _rotMatr[0][2]);
-//    _up = GMlib::Vector<float, 3>(_rotMatr[2][0], _rotMatr[2][1], _rotMatr[2][2]);
 
-//    this->set(_pos,_dir,_up);
-
-//    if ((this->getPos() + _dS)[2] > 0 || _dS[2] > 0) //check for stationary position
-//    {
-//        this->translate(_dS); //translate(V*dt); //for translation
-//    }
-
-    //----------------------------------------
   }

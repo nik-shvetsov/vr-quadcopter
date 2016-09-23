@@ -3,18 +3,27 @@
 
 #include <parametrics/gmpsphere>
 //#include "collision.h"
-//#include "surface type"
+
+#include "quad.h"
+#include "terrain.h"
+#include "skybox.h"
+#include "textureloader.h"
 
 #include <QDebug>
 
-class Controller:public GMlib::PSphere<float> {
-    GM_SCENEOBJECT(PSphere)
+#include <memory>
+
+class Scenario;
+
+class Controller : public GMlib::SceneObject {
+    GM_SCENEOBJECT(Controller)
 
 public:
+    Controller(Scenario* scenario);
+    ~Controller();
 
-  //Controller(GMlib::PBezierSurf<float>* surf);
-  Controller();
-  ~Controller();
+    void moveUp();
+    void moveDown();
 
     //void insertQuad(Ball* ball);
     //void insertWall(PWall* wall);
@@ -26,10 +35,17 @@ public:
 
 
 protected:
-
-    void localSimulate (double dt);
+    void localSimulate(double dt) override;
 
 private:
+    std::shared_ptr<Quad> _qd;
+    std::shared_ptr<Terrain> _terrain;
+    std::shared_ptr<Skybox> _skybox;
+
+    std::shared_ptr<GMlib::Camera> _followCam;
+
+    std::vector<GMlib::Point<float, 3>> _traj;
+    Scenario* _scenario;
 
     //GMlib::Array<Collision> _arrCols;
     //GMlib::Array<Ball*> _arrBalls;

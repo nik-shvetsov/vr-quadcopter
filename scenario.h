@@ -7,6 +7,7 @@
 #include <QObject>
 
 
+class Controller;
 
 class Scenario : public GMlibWrapper {
   Q_OBJECT
@@ -28,18 +29,9 @@ public:
   //void  keyPressed(const QString& name, QKeyEvent* event);
 
 private:
-
   //Quad* _qd {nullptr};
-  std::shared_ptr<Quad> _qd;
 
-  //Terrain* _terrain;
-  std::shared_ptr<Terrain> _terrain;
-
-  //Skybox* _skybox;
-  std::shared_ptr<Skybox> _skybox;
-
-  //std::vector<std::shared_ptr<GMlib::Sphere>> _traj;
-
+  Controller* _controller;
 
 };
 

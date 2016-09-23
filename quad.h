@@ -10,11 +10,14 @@
 
 #include <QDebug>
 
+class Scenario;
+
+
 class Quad : public GMlib::SceneObject {
     GM_SCENEOBJECT(Quad)
 
 public:
-  Quad();
+  Quad(Scenario* scenario);
   ~Quad();
 
 //methods for quad properties
@@ -27,23 +30,10 @@ public:
     GMlib::Vector<double,3> calculateTorque(double dt);
     void calculateAngVelXMatrix(double dt);
 
-
     //-------------------------------------------------
-    void setVelocity(GMlib::Vector<float,3> velocity);
-    GMlib::Vector<float,3> getVelocity();
-
-
-    GMlib::Vector<float,3> getDs();
     GMlib::Point<float,3> getPosition();
 
-    //thrust
-    void setMotorThrust(GMlib::Vector<float,4> thrustvec); //&
-    GMlib::Vector<float,4> getMotorThrust();
-
     void switchDirRotors();
-    GMlib::Vector<float,3> computeFrameDs();
-
-    void computeStep(double dt);
     //-------------------------------------------
 
 protected:
@@ -53,15 +43,11 @@ private:
   double _mass;
   float _d;
 
+  Scenario* _sc;
+
   std::vector<Motor*> _motors {}; //in every motor there is a rotor
   Frame* _frame;
   GMlib::PSphere<float>* _colSphere; //collision sphere
-
-
-  //
-  GMlib::Vector<float,3> _velocity;
-  GMlib::Vector<float,3> _dS;
-  //
 
   //values for movment
   const double _Ct = (86.0e-7); //thrust coef

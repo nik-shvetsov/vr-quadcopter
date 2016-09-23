@@ -12,11 +12,6 @@ public:
   Skybox(float radius);
   ~Skybox();
 
-//methods for properties
-
-protected:
-  void localSimulate(double dt);
-
 private:
 
 }; // END class

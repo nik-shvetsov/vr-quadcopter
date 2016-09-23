@@ -1,10 +1,15 @@
 #include "scenario.h"
 
 #include "testtorus.h"
+#include "testball.h"
+
+#include "controller.h"
+
 #include "quad.h"
 #include "terrain.h"
 #include "skybox.h"
 #include "textureloader.h"
+
 
 //// hidmanager
 //#include "hidmanager/defaulthidmanager.h"
@@ -96,30 +101,14 @@ void Scenario::initializeScenario() {
 
   //adding my objects
 
+//  auto ball = new Ball(0.5);
+//  ball->toggleDefaultVisualizer();
+//  ball->replot(200,200,1,1);
+//  scene()->insert(ball);
+
   //controller
-  //
-
-  //terrain
-  _terrain = std::make_shared<Terrain>(GMlib::Point<float,3>(-3,-2,0), GMlib::Vector<float,3>(0,10,0), GMlib::Vector<float,3>(6,0,0));
-  //_terrain = new Terrain(GMlib::Point<float,3>(-3,-2,0), GMlib::Vector<float,3>(0,10,0), GMlib::Vector<float,3>(6,0,0));
-  scene()->insert(_terrain.get());
-  //scene()->insert(_terrain);
-
-  //skybox
-  _skybox = std::make_shared<Skybox>(1000.0f);
-  //_skybox = new Skybox(1000.0f);
-  scene()->insert(_skybox.get());
-  //scene()->insert(_skybox);
-
-  //walls
-  //
-
-  //quadcopter
-  _qd = std::make_shared<Quad>();
-  //_qd = new Quad();
-  _qd->translateGlobal(GMlib::Vector<float,3>(0,0,1));
-  scene()->insert(_qd.get());
-  //scene()->insert(_qd);
+  _controller = new Controller(this);
+  scene()->insert(_controller);
 
   //tests
 
@@ -138,13 +127,22 @@ void Scenario::cleanupScenario() {
 
 void Scenario::moveUp() //uplift
 {
-    auto motors = _qd->getMotors();
-    for(int i = 0; i < 4; i++)
-    {
-        motors[i]->updateThrustUp(0.2);
-    }
-
+    _controller->moveUp();
 }
+
+void Scenario::moveDown() //down
+{
+    _controller->moveDown();
+}
+
+//void Scenario::moveUpReleased()
+//{
+//    moveUpReleased();
+//}
+//void Scenario::moveDownReleased()
+//{
+//    moveDownReleased();
+//}
 
 /*
 void Scenario::moveUp() //for method 2
@@ -156,16 +154,6 @@ void Scenario::moveUp() //for method 2
     rotors[3]->setVelocityRot(rotors[3]->getVelocityRot()+10);
 }
 */
-
-void Scenario::moveDown() //will be used for prototype quadromovment //downfall
-{
-    //GMlib::Vector<float,4> moveVec = _qd->getMotorThrust();
-    for (int i = 0; i < 4; i++)
-    {
-        //moveVec[i] -= 1.0; //value?
-    }
-   // _qd->setMotorThrust(moveVec);
-}
 
 void Scenario::moveForward() //pitch
 {

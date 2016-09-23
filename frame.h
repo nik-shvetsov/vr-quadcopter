@@ -12,16 +12,10 @@ class Frame : public GMlib::PSphere<float> {
 public:
   Frame(double radius);
   ~Frame();
-
   float getStSize();
 
-protected:
-  void localSimulate(double dt);
-
 private:
-
   float _stSize;
-  GMlib::Vector<float,3> _dS;
 
 }; // END class
 

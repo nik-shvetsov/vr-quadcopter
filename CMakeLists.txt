@@ -81,7 +81,8 @@ set( HDRS
   motor.h
   frame.h
   quad.h
-  #controller.h
+  controller.h
+  testball.h
   textureloader.h
   skybox.h
   scenario.h
@@ -110,7 +111,8 @@ set( SRCS
   motor.cpp
   frame.cpp
   quad.cpp
-  #controller.cpp
+  controller.cpp
+  testball.cpp
   textureloader.cpp
   skybox.cpp
   scenario.cpp

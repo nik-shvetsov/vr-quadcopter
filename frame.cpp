@@ -27,9 +27,6 @@
       this->insert(stEW);
       stEW->rotateGlobal(GMlib::Angle(90), GMlib::Vector<float,3>(1,0,0));
 
-
-
-      _dS = GMlib::Vector<float,3> (0,0,0);
   }
 
   Frame::~Frame() {}
@@ -37,11 +34,4 @@
   float Frame::getStSize()
   {
       return _stSize;
-  }
-
-  void Frame::localSimulate(double dt)
-  {
-    //rotateGlobal(GMlib::Angle(_dS.getLength()/this->getRadius()), this->getSurfNormal()^_dS);
-    //rotateParent(_dS.getLength(), this->getGlobalPos(), this->getSurfNormal()^_dS);
-
   }

@@ -20,18 +20,15 @@ public:
     void setThrust(float thrust);
     float getThrust();
 
-    void updateThrustUp(float thrust);
+    void updateThrust(float thrust);
     float getAngularVelocity(double dt);
 
-
+    void speedPitch(float pitchVal);
+    void speedRoll(float rollVal);
+    void speedYaw(float yawVal);
 
 //-----------------------------
-    void computeStep(double dt);
-    void setVelocity(GMlib::Vector<float,3> vel);
-    GMlib::Vector<float,3> getVelocity();
-
     float getTotalThrust();
-    GMlib::Vector<float,3> getDs();
 
 protected:
   void localSimulate(double dt);
@@ -45,12 +42,6 @@ private:
   float _velYaw;
   float _velPitch;
 
-
-
-  //--------------
-
-  GMlib::Vector<float,3> _velocity;
-  GMlib::Vector<float,3> _dS;
 
 }; // END class
 #endif // MOTOR_H

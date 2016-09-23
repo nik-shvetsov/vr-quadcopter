@@ -6,14 +6,15 @@
       :GMlib::PSphere<float>(radius)
   {
       this->_radius = radius;
-      _dS = GMlib::Vector<float,3> (0,0,0);
-      _velocity = GMlib::Vector<float,3> (0,0,0);
+
+      this->toggleDefaultVisualizer();
+      this->replot(200,200,1,1);
+      this->setMaterial(GMlib::GMmaterial::Gold);
 
       _thrust = 0;
       _velRoll = 0;
       _velYaw = 0;
       _velPitch = 0;
-
 
       float upZ = 0.04 * 0.1;
 
@@ -43,20 +44,43 @@
         return (_thrust + _velPitch + _velRoll + _velYaw) / dt;
     }
 
-    void Motor::setThrust(float thrust)
-    {
-        _thrust = thrust;
-    }
-
     float Motor::getThrust()
     {
         return _thrust;
     }
 
-    void Motor::updateThrustUp(float thrust)
+    void Motor::setThrust(float thrust)
+    {
+        _thrust = thrust;
+    }
+
+    void Motor::updateThrust(float thrust)
     {
         _thrust += thrust;
+        if (_thrust < 0.0) _thrust = 0.0;
     }
+
+    void Motor::speedPitch(float pitchVal) // 0 0.1 -0.1
+    {
+        _velPitch = pitchVal;
+    }
+    void Motor::speedRoll(float rollVal) // 0 0.1 -0.1
+    {
+        _velRoll = rollVal;
+    }
+    void Motor::speedYaw(float yawVal) // 0 0.1 -0.1
+    {
+        _velYaw = yawVal;
+    }
+
+    float Motor::getTotalThrust()
+    {
+        float force = std::sqrt( (1.25 * 9.81) / (4 * 86.0e-7) );
+        _thrust = force*2*0.2;
+
+        return _thrust;
+    }
+
 
     void Motor::localSimulate(double dt)
     {
@@ -67,39 +91,6 @@
     }
 
 //----------------------------------------old methods
-
-    void Motor::setVelocity(GMlib::Vector<float,3> vel)
-    {
-        _velocity = vel;
-    }
-
-    GMlib::Vector<float,3> Motor::getVelocity()
-    {
-        return _velocity;
-    }
-
-    float Motor::getTotalThrust()
-    {
-        //float force = std::sqrt( (1.25 * 9.81) / (4 * 86.0e-7) );
-        //_thrust = force * 2 * adjDt;
-
-        return _thrust;
-    }
-
-    void Motor::computeStep(double dt)
-    {
-        _dS = (dt * _velocity + 0.5 * dt * dt * _g);
-        _velocity = dt*_g;
-    }
-
-    GMlib::Vector<float,3> Motor::getDs()
-    {
-        return this->_dS;
-    }
-
-
-
-
 
 
 

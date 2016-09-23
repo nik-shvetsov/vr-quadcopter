@@ -15,8 +15,3 @@
   }
 
   Skybox::~Skybox() {}
-
-  void Skybox::localSimulate(double dt)
-  {
-
-  }
