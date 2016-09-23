@@ -18,15 +18,10 @@
 #include <QQuickItem>
 #include <QDebug>
 
-//void Scenario::initQuad(Quad& quad)
-//{
-//  _qd = &quad;
-//}
-
 void Scenario::initializeScenario() {
 
   // Insert a light
-  GMlib::Point<GLfloat,3> init_light_pos( 2.0, 4.0, 10 );
+  GMlib::Point<GLfloat,3> init_light_pos( 2.0, 4.0, 10 ); //change light pos
   GMlib::PointLight *light = new GMlib::PointLight(  GMlib::GMcolor::White, GMlib::GMcolor::White,
                                                      GMlib::GMcolor::White, init_light_pos );
   light->setAttenuation(0.8, 0.002, 0.0008);
@@ -76,6 +71,14 @@ void Scenario::initializeScenario() {
   top_rcpair.renderer->reshape( GMlib::Vector<int,2>(init_viewport_size, init_viewport_size) );
 
   //Follow cam
+//  auto quad_rcpair = createRCPair("Follow");
+//  proj_rcpair.camera->set(init_cam_pos,init_cam_dir,init_cam_up);
+//  proj_rcpair.camera->setCuttingPlanes( 1.0f, 8000.0f );
+//  proj_rcpair.camera->rotateGlobal( GMlib::Angle(-45), GMlib::Vector<float,3>( 1.0f, 0.0f, 0.0f ) );
+//  proj_rcpair.camera->translateGlobal( GMlib::Vector<float,3>( 0.0f, -7.0f, 7.0f ) );
+//  proj_rcpair.camera->enableCulling(false);
+//  scene()->insertCamera( quad_rcpair.camera.get() );
+//  quad_rcpair.renderer->reshape( GMlib::Vector<int,2>(init_viewport_size, init_viewport_size) );
 
 
   // Surface visualizers
@@ -97,20 +100,26 @@ void Scenario::initializeScenario() {
   //
 
   //terrain
-  auto floor = new Terrain(GMlib::Point<float,3>(-3,-2,0), GMlib::Vector<float,3>(0,10,0), GMlib::Vector<float,3>(6,0,0));
-  scene()->insert(floor);
+  _terrain = std::make_shared<Terrain>(GMlib::Point<float,3>(-3,-2,0), GMlib::Vector<float,3>(0,10,0), GMlib::Vector<float,3>(6,0,0));
+  //_terrain = new Terrain(GMlib::Point<float,3>(-3,-2,0), GMlib::Vector<float,3>(0,10,0), GMlib::Vector<float,3>(6,0,0));
+  scene()->insert(_terrain.get());
+  //scene()->insert(_terrain);
 
   //skybox
-  auto skybox = new Skybox(1000.0f);
-  scene()->insert(skybox);
+  _skybox = std::make_shared<Skybox>(1000.0f);
+  //_skybox = new Skybox(1000.0f);
+  scene()->insert(_skybox.get());
+  //scene()->insert(_skybox);
 
   //walls
   //
 
   //quadcopter
-  _qd = std::make_shared<Quad>(1.25, GMlib::Vector<float,3>(0,0,0.0)); //mass, vel
+  _qd = std::make_shared<Quad>();
+  //_qd = new Quad();
   _qd->translateGlobal(GMlib::Vector<float,3>(0,0,1));
   scene()->insert(_qd.get());
+  //scene()->insert(_qd);
 
   //tests
 
@@ -127,52 +136,13 @@ void Scenario::cleanupScenario() {
 }
 
 
-void Scenario::moveUp() //uplift actually throttle
+void Scenario::moveUp() //uplift
 {
-    std::vector<Motor*> motors = _qd->getMotors();
-    for (auto mot : motors)
+    auto motors = _qd->getMotors();
+    for(int i = 0; i < 4; i++)
     {
-        mot->setVelocity(GMlib::Vector<float,3> (0,0,1));
+        motors[i]->updateThrustUp(0.2);
     }
-
-
-    /*
-
-
-
-    //_qd->translate(GMlib::Vector<float,3>(0,0,1)); //placeholder for checking
-
-    GMlib::Vector<float,3> newVelVect = _qd->getVelocity();
-    if (newVelVect[2] < 10.0 && newVelVect[2] > -10.0)
-    {
-        if (newVelVect[2] < 0.0)
-        {
-            newVelVect[2] = 0.0;
-        }
-
-        newVelVect[2] += 0.9;
-        newVelVect[1] *= 0.5;
-        newVelVect[0] *= 0.5;
-
-        _qd->setVelocity(newVelVect);
-    }
-    else
-    {
-        while (newVelVect[2] >= 10.0 || newVelVect[2] <= -10.0)
-        {
-            newVelVect[2] *= 0.9;
-            _qd->setVelocity(newVelVect);
-        }
-    }
-
-//    GMlib::Vector<float,4> moveVec = _qd->getMotorThrust();
-//    for (int i = 0; i < 4; i++)
-//    {
-//        moveVec[i] += 1.0; //value?
-//    }
-//    _qd->setMotorThrust(moveVec);
-
-*/
 
 }
 

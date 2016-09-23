@@ -2,6 +2,8 @@
 
 #include "../testtorus.h"
 #include "../quad.h"
+#include "../terrain.h"
+#include "../skybox.h"
 #include "utils.h"
 
 

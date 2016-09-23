@@ -9,10 +9,15 @@
       _dS = GMlib::Vector<float,3> (0,0,0);
       _velocity = GMlib::Vector<float,3> (0,0,0);
 
+      _thrust = 0;
+      _velRoll = 0;
+      _velYaw = 0;
+      _velPitch = 0;
+
 
       float upZ = 0.04 * 0.1;
 
-      auto rotor = new Rotor(0,1);
+      auto rotor = new Rotor(1);
       _rotor = rotor;
 
       _rotor->toggleDefaultVisualizer();
@@ -28,6 +33,16 @@
 
 //methods for setting Motor properties
 
+    Rotor* Motor::getRotor()
+    {
+      return _rotor;
+    }
+
+    float Motor::getAngularVelocity(double dt)
+    {
+        return (_thrust + _velPitch + _velRoll + _velYaw) / dt;
+    }
+
     void Motor::setThrust(float thrust)
     {
         _thrust = thrust;
@@ -37,6 +52,21 @@
     {
         return _thrust;
     }
+
+    void Motor::updateThrustUp(float thrust)
+    {
+        _thrust += thrust;
+    }
+
+    void Motor::localSimulate(double dt)
+    {
+      _rotor->setVelocityRot(this->getThrust()); //velocityRot.rotor = thrust.motor
+
+      //this->computeStep(dt);
+      //this->translate(_dS);
+    }
+
+//----------------------------------------old methods
 
     void Motor::setVelocity(GMlib::Vector<float,3> vel)
     {
@@ -48,25 +78,13 @@
         return _velocity;
     }
 
-    Rotor* Motor::getRotor()
-    {
-        return _rotor;
-    }
-
     float Motor::getTotalThrust()
     {
-        float force = std::sqrt( (1.25 * 9.81) / (4 * 86.0e-7) );
-        _thrust = force * 2 * adjDt;
+        //float force = std::sqrt( (1.25 * 9.81) / (4 * 86.0e-7) );
+        //_thrust = force * 2 * adjDt;
 
         return _thrust;
     }
-
-//    float Motor::getVelRot()
-//    {
-//        this->getTotalThrust() / (2 * adjDt);
-//    }
-
-
 
     void Motor::computeStep(double dt)
     {
@@ -80,9 +98,8 @@
     }
 
 
-  void Motor::localSimulate(double dt)
-  {
-    this->computeStep(dt);
-    this->translate(_dS);
 
-  }
+
+
+
+

@@ -27,6 +27,8 @@
       this->insert(stEW);
       stEW->rotateGlobal(GMlib::Angle(90), GMlib::Vector<float,3>(1,0,0));
 
+
+
       _dS = GMlib::Vector<float,3> (0,0,0);
   }
 

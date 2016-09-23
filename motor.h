@@ -13,13 +13,20 @@ public:
   Motor(double radius);
   ~Motor();
 
-//methods for quad properties
+    Rotor* getRotor();
+
+    //--------------
 
     void setThrust(float thrust);
     float getThrust();
-    Rotor* getRotor();
-    void computeStep(double dt);
 
+    void updateThrustUp(float thrust);
+    float getAngularVelocity(double dt);
+
+
+
+//-----------------------------
+    void computeStep(double dt);
     void setVelocity(GMlib::Vector<float,3> vel);
     GMlib::Vector<float,3> getVelocity();
 
@@ -31,11 +38,16 @@ protected:
 
 private:
   const GMlib::Vector<float,3> _g = GMlib::Vector<float,3> (0.0, 0.0, -9.81); //-9.81
-
-  const float adjDt = 0.2;
+  Rotor* _rotor;
 
   float _thrust;
-  Rotor* _rotor;
+  float _velRoll;
+  float _velYaw;
+  float _velPitch;
+
+
+
+  //--------------
 
   GMlib::Vector<float,3> _velocity;
   GMlib::Vector<float,3> _dS;

@@ -11,7 +11,7 @@ class Rotor : public GMlib::PCylinder<float> {
     GM_SCENEOBJECT(Rotor)
 
 public:
-  Rotor(float velocityRot, int direction);
+  Rotor(int direction);
   ~Rotor();
 
 //methods for quad properties

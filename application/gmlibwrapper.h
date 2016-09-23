@@ -3,6 +3,8 @@
 
 class TestTorus;
 class Quad;
+class Terrain;
+class Skybox;
 
 
 class GLContextSurfaceWrapper;

@@ -19,6 +19,7 @@ protected:
   void localSimulate(double dt);
 
 private:
+
   float _stSize;
   GMlib::Vector<float,3> _dS;
 

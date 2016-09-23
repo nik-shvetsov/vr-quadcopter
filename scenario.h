@@ -1,9 +1,7 @@
 #ifndef SCENARIO_H
 #define SCENARIO_H
 
-
 #include "application/gmlibwrapper.h"
-
 
 // qt
 #include <QObject>
@@ -28,12 +26,21 @@ public:
   void yawLeft();
 
   //void  keyPressed(const QString& name, QKeyEvent* event);
-  //void  initQuad( Quad& quad );
 
 private:
 
   //Quad* _qd {nullptr};
   std::shared_ptr<Quad> _qd;
+
+  //Terrain* _terrain;
+  std::shared_ptr<Terrain> _terrain;
+
+  //Skybox* _skybox;
+  std::shared_ptr<Skybox> _skybox;
+
+  //std::vector<std::shared_ptr<GMlib::Sphere>> _traj;
+
+
 };
 
 #endif // SCENARIO_H
