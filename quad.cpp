@@ -26,13 +26,13 @@
       //motors
       float motorSize = 0.05; //0.5
       auto motor1 = std::make_shared<Motor>(motorSize); //10
-      _motors.push_back(motor1);
+      _motors.emplace_back(motor1); //better than push_back due to r-value ref
       auto motor2 = std::make_shared<Motor>(motorSize);
-      _motors.push_back(motor2);
+      _motors.emplace_back(motor2);
       auto motor3 = std::make_shared<Motor>(motorSize);
-      _motors.push_back(motor3);
+      _motors.emplace_back(motor3);
       auto motor4 = std::make_shared<Motor>(motorSize);
-      _motors.push_back(motor4);
+      _motors.emplace_back(motor4);
 
       std::vector<GMlib::Vector<float,3>> translateVecSt;
       translateVecSt.push_back(GMlib::Vector<float,3>(-_d,0,0));

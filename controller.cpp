@@ -43,7 +43,7 @@
       auto motors = _qd->getMotors();
       for(int i = 0; i < 4; i++)
       {
-          motors[i]->updateThrust(-0.2);//5
+          motors[i]->updateThrust(-0.1);
       }
   }
 

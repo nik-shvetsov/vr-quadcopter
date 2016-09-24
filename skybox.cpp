@@ -12,6 +12,7 @@
       this->insertVisualizer(skyTexture);
       this->replot(50, 50, 1, 1);
       this->setMaterial(GMlib::GMmaterial::Snow);
+
   }
 
   Skybox::~Skybox() {}

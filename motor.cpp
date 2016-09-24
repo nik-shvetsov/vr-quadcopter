@@ -47,7 +47,8 @@
     void Motor::updateThrust(float thrust)
     {
         _thrust += thrust;
-        if (_thrust < 0.0) _thrust = 0.0;
+        if (_thrust < min_thrust) _thrust = min_thrust;
+        if (_thrust > max_thrust) _thrust = max_thrust;
     }
 
     void Motor::setPitch(float pitchVal) // 0 0.1 -0.1

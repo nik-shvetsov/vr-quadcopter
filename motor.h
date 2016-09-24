@@ -40,6 +40,9 @@ private:
   float _velYaw;
   float _velPitch;
 
+  float max_thrust = 10.0;
+  float min_thrust = 0.0;
+
 
 }; // END class
 #endif // MOTOR_H

@@ -73,6 +73,8 @@ void Scenario::initializeScenario() {
   auto top_rcpair = createRCPair("Top");
   top_rcpair.camera->set( init_cam_pos + GMlib::Vector<float,3>( 0.0f, 0.0f, 50.0f ), -init_cam_up, init_cam_dir );
   top_rcpair.camera->setCuttingPlanes( 1.0f, 8000.0f );
+  top_rcpair.camera->translateGlobal(GMlib::Vector<float,3> (0.0f, 0.0f, -45.0f));
+  top_rcpair.camera->enableCulling(false);
   scene()->insertCamera( top_rcpair.camera.get() );
   top_rcpair.renderer->reshape( GMlib::Vector<int,2>(init_viewport_size, init_viewport_size) );
 
