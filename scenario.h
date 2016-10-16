@@ -18,6 +18,7 @@ public:
   void    initializeScenario() override;
   void    cleanupScenario() override;
 
+
   void moveUp();
   void moveDown();
   void rollRight();
@@ -36,13 +37,15 @@ public:
   void yawRightReleased();
   void yawLeftReleased();
 
-  //void  keyPressed(const QString& name, QKeyEvent* event);
+  //QString getHeight();
+
+signals:
+    void signUpdateHeight(const QString& text) const;
 
 private:
   //Quad* _qd {nullptr};
-  //Controller* _controller;
-
-  std::shared_ptr<Controller> _controller;
+  Controller* _controller;
+  //std::shared_ptr<Controller> _controller;
 
 };
 

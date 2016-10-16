@@ -39,14 +39,25 @@
       return _rotor;
     }
 
-    float Motor::getAngularVelocity(double dt)
+    float Motor::getAngularVelocity()
     {
-        return (_thrust + _velPitch + _velRoll + _velYaw) / dt;
+        return (_thrust + _velPitch + _velRoll + _velYaw) / dt_stable;
+        //return getTotalThrust() / (2.0 * dt_stable);
     }
 
     void Motor::updateThrust(float thrust)
     {
-        _thrust += thrust;
+        if (thrust > 0)
+        {
+            _thrust += thrust;
+        }
+
+        else
+        {
+            if (_thrust >= thrust) _thrust += thrust;
+            else _thrust = min_thrust;
+        }
+
         if (_thrust < min_thrust) _thrust = min_thrust;
         if (_thrust > max_thrust) _thrust = max_thrust;
     }
@@ -76,15 +87,14 @@
 
     void Motor::localSimulate(double dt)
     {
-      _rotor->setVelocityRot(this->getThrust()); //velocityRot.rotor = thrust.motor
+        _rotor->setVelocityRot(this->getThrust()); //velocityRot.rotor = thrust.motor
     }
-
-
 
     //-------------------------------
     float Motor::getTotalThrust()
     {
-        //float force = std::sqrt( (1.25 * 9.81) / (4 * 86.0e-7) );
-        //_thrust = force*2*0.2;
-        return _thrust;
+        float check = (1.25f * g) / (4.0 * 8.6e-6);
+        float sq = std::sqrt(check);
+        float total = (sq * 2.0 * dt_stable);
+        return total;
     }

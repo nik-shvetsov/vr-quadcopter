@@ -2,11 +2,14 @@
 #define CONTROLLER_H
 
 #include <parametrics/gmpsphere>
+#include <scene/gmsceneobject>
 //#include "collision.h"
 
 #include "quad.h"
 #include "terrain.h"
 #include "skybox.h"
+#include "wall.h"
+#include "testball.h"
 #include "textureloader.h"
 
 #include <QDebug>
@@ -15,7 +18,8 @@
 
 class Scenario;
 
-class Controller : public GMlib::SceneObject {
+class Controller : public GMlib::SceneObject
+{
     GM_SCENEOBJECT(Controller)
 
 public:
@@ -40,6 +44,10 @@ public:
     void yawRightReleased();
     void yawLeftReleased();
 
+    std::shared_ptr<Quad> getQuad();
+
+    void createBall();
+
 
     //void insertQuad(Ball* ball);
     //void insertWall(PWall* wall);
@@ -57,11 +65,16 @@ private:
     std::shared_ptr<Quad> _qd;
     std::shared_ptr<Terrain> _terrain;
     std::shared_ptr<Skybox> _skybox;
+
+    std::vector<std::shared_ptr<Wall>> _walls;
+
     std::shared_ptr<GMlib::Camera> _followCam;
 
-    std::vector<GMlib::Point<float, 3>> _traj;
     Scenario* _scenario;
 
+    long _timerScene = 0;
+    //std::vector<Ball*> _traj;
+    std::vector<std::shared_ptr<Ball>> _balls;
 
     //GMlib::Array<Collision> _arrCols;
     //GMlib::Array<Ball*> _arrBalls;

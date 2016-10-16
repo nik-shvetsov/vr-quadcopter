@@ -7,6 +7,7 @@
 
 #include <parametrics/gmpsphere>
 #include <gmParametricsModule>
+#include <scene/gmsceneobject>
 
 #include <QDebug>
 
@@ -25,27 +26,30 @@ public:
     double getMass();
     std::vector<std::shared_ptr<Motor>> getMotors();
 
-    double computeForce(double dt);
+    float computeForce();
 
-    GMlib::Vector<double,3> calculateTorque(double dt);
+    GMlib::Vector<double,3> calculateTorque();
     void calculateAngVelXMatrix(double dt);
+    void initializeMat();
+    void reinitializeMat();
 
-    //-------------------------------------------------
     GMlib::Point<float,3> getPosition();
-
     void switchDirRotors();
-    //-------------------------------------------
+    double getHeight();
+    std::shared_ptr<GMlib::PSphere<float>> getColSphere();
 
 protected:
   void localSimulate(double dt);
 
 private:
-  double _mass;
+  const double _mass = 1.25;
   float _d;
+  double _height;
 
   Scenario* _sc;
 
   std::vector<std::shared_ptr<Motor>> _motors;
+  std::vector<std::shared_ptr<Rotor>> _rotors;
   //std::vector<Motor*> _motors {}; //in every motor there is a rotor
   std::shared_ptr<Frame> _frame;
   //Frame* _frame;
@@ -63,8 +67,6 @@ private:
   GMlib::SqMatrix<double,3> _dotRotMatr; //dot rotation matrix
   GMlib::SqMatrix<double,3> _angVelMatX;//omegaX
 
-
-
   GMlib::Vector<double,3> _angVel; //omega
   GMlib::Vector<double,3> _dotAngVel; //omegaDot
   GMlib::Vector<double,3> _torq; //torque
@@ -74,6 +76,8 @@ private:
   GMlib::Point<float,3> _position;
   GMlib::Vector<float,3> _dir;
   GMlib::Vector<float,3> _up;
+
+  //QString label;
 
 
 }; // END class

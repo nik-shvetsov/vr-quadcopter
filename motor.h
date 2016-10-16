@@ -20,7 +20,7 @@ public:
     float getThrust();
 
     void updateThrust(float thrust);
-    float getAngularVelocity(double dt);
+    float getAngularVelocity();
 
     void setPitch(float pitchVal);
     void setRoll(float rollVal);
@@ -40,8 +40,10 @@ private:
   float _velYaw;
   float _velPitch;
 
-  float max_thrust = 10.0;
-  float min_thrust = 0.0;
+  const double dt_stable = 0.016;
+  const float g = 9.81;
+  const float max_thrust = 12.0;
+  const float min_thrust = 0.0;
 
 
 }; // END class

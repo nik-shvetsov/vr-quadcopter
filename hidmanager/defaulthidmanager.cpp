@@ -458,7 +458,7 @@ void DefaultHidManager::heRollLeft() {
 
 void DefaultHidManager::heYawRight() {
 
-    emit signRollRight();
+    emit signYawRight();
 }
 
 void DefaultHidManager::heYawLeft() {

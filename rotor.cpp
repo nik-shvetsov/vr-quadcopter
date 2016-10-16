@@ -7,7 +7,6 @@
   {
       this->_direction = direction; //-1 or 1
       _velocityRot = 0;
-
   }
 
   Rotor::~Rotor() {}
@@ -36,8 +35,11 @@
 
   void Rotor::localSimulate(double dt)
   { 
-      double angle = _velocityRot * _direction * dt;
+      double angle = _velocityRot * dt * _direction;
+      if (_velocityRot > 2) angle *= 2.5;
       rotateParent(GMlib::Angle(angle), GMlib::Vector<float,3> (0,0,1));
+
+      //qDebug() << _velocityRot << " " << dt << " " << _direction;
 
     //rotateParent(_dS.getLength(), this->getGlobalPos(), this->getSurfNormal()^_dS);
     //this->translateParent(_dS);

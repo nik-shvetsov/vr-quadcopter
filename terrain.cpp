@@ -9,11 +9,9 @@
       TextureLoader texLoader;
       auto grassTexture = texLoader.loadTexture("../../textures/gr.jpg");
       this->insertVisualizer(grassTexture);
-
-      //this->toggleDefaultVisualizer();
-
-      this->replot(50, 50, 1, 1);
       this->setMaterial(GMlib::GMmaterial::Emerald);
+      //this->toggleDefaultVisualizer();
+      this->replot(50, 50, 1, 1);
   }
 
   Terrain::~Terrain() {}

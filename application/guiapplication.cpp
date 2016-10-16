@@ -43,8 +43,10 @@ GuiApplication::GuiApplication(int& argc, char **argv) : QGuiApplication(argc, a
   connect( this, &QGuiApplication::lastWindowClosed,
            this, &QGuiApplication::quit );
 
+  _window.rootContext()->setContextProperty( "scenario", &_scenario);
   _window.rootContext()->setContextProperty( "rc_name_model", &_scenario.rcNameModel() );
   _window.rootContext()->setContextProperty( "hidmanager_model", _hidmanager.getModel() );
+
   _window.setSource(QUrl("qrc:///qml/main.qml"));
 
   _window.show();
@@ -169,8 +171,10 @@ GuiApplication::afterOnSceneGraphInitialized() {
     connect( &_hidmanager, &DefaultHidManager::signYawLeftReleased,
              &_scenario, &Scenario::yawLeftReleased );
 
+    auto qml_rootobject = _window.rootObject();
 
-
+    connect( &_scenario, SIGNAL(signUpdateHeight(QString)),
+             qml_rootobject, SIGNAL(updateHeight(QString)) );
 
 
   // Update RCPair name model

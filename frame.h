@@ -5,17 +5,22 @@
 #include <gmParametricsModule>
 
 #include <QDebug>
+#include <memory>
 
-class Frame : public GMlib::PSphere<float> {
+class Frame : public GMlib::SceneObject
+{
     GM_SCENEOBJECT(Frame)
 
 public:
-  Frame(double radius);
+  Frame(float radius);
   ~Frame();
   float getStSize();
 
 private:
-  float _stSize = 0.5;
+  const float _stSize = 0.5;
+
+  std::vector<std::shared_ptr<GMlib::PCylinder<float>>> _stQuad;
+  std::vector<std::shared_ptr<GMlib::PSphere<float>>> _mainsphere;
 
 }; // END class
 

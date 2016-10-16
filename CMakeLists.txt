@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD 14)
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Weverything")  # -Weverything equivalent to g++ -pedantic, -Werror and -Wall
 else()
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pedantic -Wall -Werror")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 endif()
 
 # Nice name for the IDEs
@@ -85,6 +85,7 @@ set( HDRS
   testball.h
   textureloader.h
   skybox.h
+  wall.h
   scenario.h
 
   )
@@ -115,6 +116,7 @@ set( SRCS
   testball.cpp
   textureloader.cpp
   skybox.cpp
+  wall.cpp
   scenario.cpp
 
 

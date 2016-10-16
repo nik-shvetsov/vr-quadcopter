@@ -27,7 +27,7 @@
 void Scenario::initializeScenario() {
 
   // Insert a light
-  GMlib::Point<GLfloat,3> init_light_pos( 2.0, 4.0, 10 ); //change light pos
+  GMlib::Point<GLfloat,3> init_light_pos( 2.0, 4.0, 10 );
   GMlib::PointLight *light = new GMlib::PointLight(  GMlib::GMcolor::White, GMlib::GMcolor::White,
                                                      GMlib::GMcolor::White, init_light_pos );
   light->setAttenuation(0.8, 0.002, 0.0008);
@@ -82,8 +82,8 @@ void Scenario::initializeScenario() {
   auto quad_follow_rcpair = createRCPair("Follow");
   quad_follow_rcpair.camera->set(init_cam_pos,init_cam_dir,init_cam_up);
   quad_follow_rcpair.camera->setCuttingPlanes( 1.0f, 8000.0f );
-  quad_follow_rcpair.camera->rotateGlobal( GMlib::Angle(-45), GMlib::Vector<float,3>( 1.0f, 0.0f, 0.0f ) );
-  quad_follow_rcpair.camera->translateGlobal( GMlib::Vector<float,3>( 0.0f, -3.0f, 3.0f ) );
+  quad_follow_rcpair.camera->rotateGlobal( GMlib::Angle(-15), GMlib::Vector<float,3>( 1.0f, 0.0f, 0.0f ) );
+  quad_follow_rcpair.camera->translateGlobal( GMlib::Vector<float,3>( 0.0f, -7.0f, 3.0f ) );
   quad_follow_rcpair.camera->enableCulling(false);
   scene()->insertCamera( quad_follow_rcpair.camera.get() );
   quad_follow_rcpair.renderer->reshape( GMlib::Vector<int,2>(init_viewport_size, init_viewport_size) );
@@ -111,12 +111,14 @@ void Scenario::initializeScenario() {
 
   //controller
   //_controller = new Controller(this, quad_follow_rcpair.camera);
-  _controller = std::make_shared<Controller>(this, quad_follow_rcpair.camera);
-  scene()->insert(_controller.get());
+
+  //_controller = std::make_shared<Controller>(this, quad_follow_rcpair.camera);
+  //scene()->insert(_controller.get());
+
+  _controller = new Controller(this, quad_follow_rcpair.camera);
+  scene()->insert(_controller);
 
   //tests
-
-
 //  auto trajectory = new GMlib::PLine<float>(GMlib::Point<float,3>(0,0,0), GMlib::Point<float,3> (2,2,2));
 //  trajectory ->toggleDefaultVisualizer();
 //  trajectory->replot(1,1);
@@ -128,6 +130,11 @@ void Scenario::cleanupScenario()
 {
 
 }
+
+//QString Scenario::getHeight()
+//{
+//    return QString::number(_controller->getQuad()->getHeight(),'m',2);
+//}
 
 //ON PRESS CONTROLS
 void Scenario::moveUp()

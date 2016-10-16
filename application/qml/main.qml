@@ -10,8 +10,10 @@ Item {
   id: root
 
   signal toggleHidBindView
-
   onToggleHidBindView: hid_bind_view.toggle()
+
+  signal updateHeight(string ht)
+  onUpdateHeight: heightLabel.text = ht
 
   Renderer {
     id: renderer
@@ -34,6 +36,39 @@ Item {
       textRole: "display"
     }
 
+    Rectangle
+    {
+        id: heightBox
+        anchors
+        {
+            margins: 10
+            bottom:     parent.bottom
+            right:   parent.right
+        }
+
+        width:  100
+        height: 25
+
+        color:   "#d3d3d3"
+        opacity: 0.7
+
+        border.color: "black"
+        border.width: 2
+
+
+        Text
+        {
+          id: heightLabel
+          anchors.centerIn: parent
+
+          function toggle()
+          {
+              //return scenario.displayHeight()
+          }
+        }
+
+    }
+
     Button {
       text: "?"
       anchors.top: parent.top
@@ -45,6 +80,7 @@ Item {
 
       onClicked: hid_bind_view.toggle()
     }
+
 
     HidBindingView {
       id: hid_bind_view

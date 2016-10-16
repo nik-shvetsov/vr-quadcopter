@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <gmParametricsModule>
+#include <parametrics/visualizers/gmpsurftexvisualizer.h>
 
 #include <QImage>
 #include <QOpenGLTexture>
