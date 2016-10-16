@@ -187,6 +187,19 @@ void Quad::initializeMat()
     _angVelMatX[2][2] = 0;
 }
 
+GMlib::Matrix<float,3,3> Quad::reintFloatMat()
+{
+    GMlib::Matrix<float,3,3> floatmat;
+    for(int i = 0; i < 3; i++)
+    {
+        for(int j = 0; j < 3; j++)
+        {
+            floatmat[i][j] = _rotMatr[i][j];
+        }
+    }
+    return floatmat;
+}
+
 void Quad::reinitializeMat()
 {
 
@@ -238,8 +251,6 @@ void Quad::localSimulate(double dt)
 
     GMlib::Vector<float,3> step = globalMatrix * _g +  (1.0 / _mass) * GMlib::Vector<float,3>(0,0,force);
 
-
-
     //_position = this->getPos();
 
     if ((getPos() + step * dt)[2] < 0.099)
@@ -249,10 +260,13 @@ void Quad::localSimulate(double dt)
 
     calculateAngVelXMatrix(dt);
 
+    auto rotFloatMat = reintFloatMat();
+
     _dir = GMlib::Vector<float, 3>(_rotMatr[0][0], _rotMatr[0][1], _rotMatr[0][2]);
     _up = GMlib::Vector<float, 3>(_rotMatr[2][0], _rotMatr[2][1], _rotMatr[2][2]);
+    //set(getPos(),_dir,_up);
 
-    set(getPos(),_dir,_up);
+    set(getPos(),rotFloatMat[0],rotFloatMat[2]);
 
 
     //height display

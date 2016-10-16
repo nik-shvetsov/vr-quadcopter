@@ -30,6 +30,7 @@ public:
 
     GMlib::Vector<double,3> calculateTorque();
     void calculateAngVelXMatrix(double dt);
+    GMlib::Matrix<float,3,3> reintFloatMat();
     void initializeMat();
     void reinitializeMat();
 

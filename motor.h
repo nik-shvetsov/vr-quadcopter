@@ -42,7 +42,7 @@ private:
 
   const double dt_stable = 0.016;
   const float g = 9.81;
-  const float max_thrust = 12.0;
+  const float max_thrust = 10.0;
   const float min_thrust = 0.0;
 
 
