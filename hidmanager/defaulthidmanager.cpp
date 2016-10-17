@@ -529,15 +529,15 @@ void DefaultHidManager::heZoom(const HidInputEvent::HidInputParams& params) {
   auto wheel_delta = wheelDeltaFromParams(params);
 
   // Qt comp scale
-  wheel_delta /= 8;
+  wheel_delta /= 100;
 
   Camera *cam    = findCamera(view_name);
   Camera *isocam = dynamic_cast<IsoCamera*>( cam );
 
   if( isocam ) {
 
-    if( wheel_delta < 0 ) isocam->zoom( 1.05 );
-    if( wheel_delta > 0 ) isocam->zoom( 0.95 );
+    if( wheel_delta < 0 ) isocam->zoom( 1.01 );
+    if( wheel_delta > 0 ) isocam->zoom( 0.99 );
   }
   else if( cam ) {
 
