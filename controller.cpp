@@ -87,20 +87,20 @@
   void Controller::yawRight()
   {
       auto motors = _qd->getMotors();
-      motors[0]->setYaw(-0.7);
-      motors[1]->setYaw(0.7);
-      motors[2]->setYaw(-0.7);
-      motors[3]->setYaw(0.7);
+      motors[0]->setYaw(-0.9);
+      motors[1]->setYaw(0.9);
+      motors[2]->setYaw(-0.9);
+      motors[3]->setYaw(0.9);
 
   }
 
   void Controller::yawLeft()
   {
       auto motors = _qd->getMotors();
-      motors[0]->setYaw(0.7);
-      motors[1]->setYaw(-0.7);
-      motors[2]->setYaw(0.7);
-      motors[3]->setYaw(-0.7);
+      motors[0]->setYaw(0.9);
+      motors[1]->setYaw(-0.9);
+      motors[2]->setYaw(0.9);
+      motors[3]->setYaw(-0.9);
   }
 
 

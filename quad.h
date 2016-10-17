@@ -61,6 +61,7 @@ private:
   const double _Ct = (86.0e-7); //thrust coef
   const double _Cq = (18.0e-8); //thrust coef
   const GMlib::Vector<float,3> _g = GMlib::Vector<float,3> (0.0, 0.0, -9.81); //-9.81
+  const double dt_stable = 0.016;
 
   GMlib::SqMatrix<double,3> _inMatr; //inertia matrix
   GMlib::SqMatrix<double,3> _invInMatr; //inverted inertia matrix

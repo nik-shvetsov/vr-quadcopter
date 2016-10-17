@@ -123,7 +123,7 @@ GMlib::Vector<double,3> Quad::calculateTorque()
 
 void Quad::calculateAngVelXMatrix(double dt)
 {
-    _rotMatr += _dotRotMatr * dt;
+    _rotMatr += _dotRotMatr * dt_stable;
 
     _angVelMatX[0][0] = 0;
     _angVelMatX[0][1] = -_angVel[2];
@@ -139,7 +139,7 @@ void Quad::calculateAngVelXMatrix(double dt)
 
     _dotRotMatr = _rotMatr * _angVelMatX;
 
-    _angVel  += _dotAngVel * dt;
+    _angVel  += _dotAngVel * dt_stable;
 
     _dotAngVel = _invInMatr * (calculateTorque() - (_angVel ^ (_inMatr * _angVel)));
 }
