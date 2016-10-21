@@ -7,7 +7,7 @@
       :GMlib::PPlane<float>(p1, v1, v2)
   {
       TextureLoader texLoader;
-      auto grassTexture = texLoader.loadTexture("../../textures/gr.jpg");
+      auto grassTexture = texLoader.loadTexture("textures/gr.jpg");
       this->insertVisualizer(grassTexture);
       this->setMaterial(GMlib::GMmaterial::Emerald);
       //this->toggleDefaultVisualizer();

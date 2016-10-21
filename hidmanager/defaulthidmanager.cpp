@@ -499,7 +499,7 @@ void DefaultHidManager::heRollLeftStop() {
 
 void DefaultHidManager::heYawRightStop() {
 
-    emit signRollRightReleased();
+    emit signYawRightReleased();
 }
 
 void DefaultHidManager::heYawLeftStop() {
@@ -507,8 +507,12 @@ void DefaultHidManager::heYawLeftStop() {
     emit signYawLeftReleased();
 }
 
-
 //------------------------------------------------------------------------------
+
+void DefaultHidManager::heLeaveBall() {
+
+    emit signLeaveBall();
+}
 
 void DefaultHidManager::heToggleSimulation() {
 
@@ -837,6 +841,13 @@ void DefaultHidManager::setupDefaultHidBindings() {
                            "Move quadcopter",
                            this, SLOT(heYawLeftStop()));
 
+    QString ha_id_leave_ball =
+        registerHidAction( "Controls",
+                           "Leave ball",
+                           "Leaves ball",
+                           this, SLOT(heLeaveBall()),
+                           OGL_TRIGGER);
+
 
   //// Set up initial mapping
   registerHidMapping( ha_id_objsel_toggle_all,            new KeyPressInput( Qt::Key_A ) );
@@ -866,8 +877,9 @@ void DefaultHidManager::setupDefaultHidBindings() {
   registerHidMapping( ha_id_roll_left_stop,               new KeyReleaseInput( Qt::Key_4, Qt::KeypadModifier));
   registerHidMapping( ha_id_yaw_right_stop,               new KeyReleaseInput( Qt::Key_9, Qt::KeypadModifier));
   registerHidMapping( ha_id_yaw_left_stop,                new KeyReleaseInput( Qt::Key_7, Qt::KeypadModifier));
-  //-------------------------------------------
 
+  //-------------------------------------------
+  registerHidMapping( ha_id_leave_ball,                   new KeyPressInput( Qt::Key_Plus, Qt::KeypadModifier));
 
   registerHidMapping( ha_id_objsel_select,                new MousePressInput( Qt::RightButton ) );
   registerHidMapping( ha_id_view_lock_to,                 new MousePressInput( Qt::RightButton, Qt::ControlModifier ) );

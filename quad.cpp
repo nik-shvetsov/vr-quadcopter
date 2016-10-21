@@ -202,7 +202,21 @@ GMlib::Matrix<float,3,3> Quad::reintFloatMat()
 
 void Quad::reinitializeMat()
 {
+    _angVel = GMlib::Vector<double,3> (0.0,0.0,0.0);
+    _dotAngVel = GMlib::Vector<double,3> (0.0,0.0,0.0);
+    _torq = GMlib::Vector<double,3> (0.0,0.0,0.0);
 
+//    _rotMatr[0][0] = 1.0;
+//    _rotMatr[0][1] = 0.0;
+//    _rotMatr[0][2] = 0.0;
+
+    _rotMatr[1][0] = 0.0;
+    _rotMatr[1][1] = 1.0;
+    _rotMatr[1][2] = 0.0;
+
+    _rotMatr[2][0] = 0.0;
+    _rotMatr[2][1] = 0.0;
+    _rotMatr[2][2] = 1.0;
 }
 
 
@@ -249,13 +263,15 @@ void Quad::localSimulate(double dt)
 
     float force = computeForce();
 
+    //qDebug() << force;
+
     GMlib::Vector<float,3> step = globalMatrix * _g +  (1.0 / _mass) * GMlib::Vector<float,3>(0,0,force);
 
     //_position = this->getPos();
 
     if ((getPos() + step * dt)[2] < 0.099)
     {
-        initializeMat();
+        reinitializeMat();
     }
 
     calculateAngVelXMatrix(dt);
@@ -285,9 +301,4 @@ void Quad::localSimulate(double dt)
     {
         set(GMlib::Point<float, 3>(getPos()(0), getPos()(1), 0.09), _dir, _up);
     }
-
-
-
-
-
 }

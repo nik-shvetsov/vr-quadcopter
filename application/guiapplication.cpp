@@ -171,6 +171,12 @@ GuiApplication::afterOnSceneGraphInitialized() {
     connect( &_hidmanager, &DefaultHidManager::signYawLeftReleased,
              &_scenario, &Scenario::yawLeftReleased );
 
+    //---------------
+
+    connect( &_hidmanager, &DefaultHidManager::signLeaveBall,
+             this, &GuiApplication::leaveBall, Qt::DirectConnection );
+
+
     auto qml_rootobject = _window.rootObject();
 
     connect( &_scenario, SIGNAL(signUpdateHeight(QString)),
@@ -182,6 +188,14 @@ GuiApplication::afterOnSceneGraphInitialized() {
 
   // Start simulator
   _scenario.start();
+
+
+}
+
+
+void GuiApplication::leaveBall()
+{
+    _scenario.createBall();
 }
 
 const GuiApplication& GuiApplication::instance() {  return *_instance; }

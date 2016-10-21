@@ -1,19 +1,20 @@
 #include "testball.h"
-
+#include "controller.h"
 
 #include <QDebug>
 
-  Ball::Ball(double radius, double timespawn, GMlib::Point<float,3> position)
+  Ball::Ball(float radius, double timespawn, GMlib::Point<float,3> position, Controller* controller)
       :GMlib::PSphere<float>(radius)
   {
+      this->_radius = radius;
       _timespawn = timespawn;
       _endtime = _timespawn + _ttl;
 
-      this->_radius = radius;
       this->toggleDefaultVisualizer();
-      this->replot(50,50,1,1);
       this->setMaterial(GMlib::GMmaterial::Ruby);
-      //this->translate(position);
+      this->replot(50,50,1,1);
+
+      this->translate(position);
   }
 
   Ball::~Ball() {}

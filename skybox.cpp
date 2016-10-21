@@ -7,7 +7,7 @@
       :GMlib::PSphere<float>(radius)
   {
       TextureLoader texLoader;
-      auto skyTexture = texLoader.loadTexture("../../textures/sky.jpg");
+      auto skyTexture = texLoader.loadTexture("textures/sky.jpg");
 
       this->insertVisualizer(skyTexture);
       this->replot(50, 50, 1, 1);

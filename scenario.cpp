@@ -206,3 +206,8 @@ void Scenario::yawLeftReleased()
 {
     _controller->yawLeftReleased();
 }
+
+void Scenario::createBall()
+{
+    _controller->createBall();
+}

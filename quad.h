@@ -40,7 +40,7 @@ public:
     std::shared_ptr<GMlib::PSphere<float>> getColSphere();
 
 protected:
-  void localSimulate(double dt);
+  void localSimulate(double dt) override;
 
 private:
   const double _mass = 1.25;

@@ -50,6 +50,8 @@ signals:
   void signYawRightReleased();
   void signYawLeftReleased();
 
+  void signLeaveBall();
+
 
 private slots:
   virtual void                      heDeSelectAllObjects();
@@ -97,6 +99,8 @@ private slots:
   virtual void                      heRollLeftStop();
   virtual void                      heYawRightStop();
   virtual void                      heYawLeftStop();
+
+  virtual void                      heLeaveBall();
 
 
 private:

@@ -23,7 +23,7 @@ public:
     int getDir();
 
 protected:
-  void localSimulate(double dt);
+  void localSimulate(double dt) override;
 
 private:
 

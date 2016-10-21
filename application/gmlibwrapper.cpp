@@ -135,7 +135,8 @@ void GMlibWrapper::cleanUp() {
   _scene.reset();
 
   // Clean up GMlib GL backend
-//  GMlib::GL::OpenGLManager::cleanUp();   // NO IMPLEMENTED IN GMlib
+  //GMlib::GL::OpenGLManager::cleanUp();   // NO IMPLEMENTED IN GMlib
+
 }
 
 GMlib::SceneObject*

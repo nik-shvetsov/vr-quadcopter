@@ -15,6 +15,7 @@
 #include <QDebug>
 
 #include <memory>
+#include <queue>
 
 class Scenario;
 
@@ -47,6 +48,7 @@ public:
     std::shared_ptr<Quad> getQuad();
 
     void createBall();
+    void removeBall(const std::shared_ptr<Ball> ball);
 
 
     //void insertQuad(Ball* ball);
@@ -75,6 +77,7 @@ private:
     long _timerScene = 0;
     //std::vector<Ball*> _traj;
     std::vector<std::shared_ptr<Ball>> _balls;
+    std::queue<std::shared_ptr<Ball>> _ballQueue;
 
     //GMlib::Array<Collision> _arrCols;
     //GMlib::Array<Ball*> _arrBalls;

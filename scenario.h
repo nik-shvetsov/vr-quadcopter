@@ -2,6 +2,7 @@
 #define SCENARIO_H
 
 #include "application/gmlibwrapper.h"
+
 #include <memory>
 
 // qt
@@ -37,14 +38,15 @@ public:
   void yawRightReleased();
   void yawLeftReleased();
 
-  //QString getHeight();
+  void createBall();
 
 signals:
     void signUpdateHeight(const QString& text) const;
 
 private:
-  //Quad* _qd {nullptr};
   Controller* _controller;
+
+  //Quad* _qd {nullptr};
   //std::shared_ptr<Controller> _controller;
 
 };
